@@ -7,29 +7,24 @@ public class p09_CustomComperator {
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        int[] numbers = Arrays.stream(reader.readLine()
-                .split("\\s+"))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+        String[] numbersAsStr = reader.readLine().split("\\s+");
+        Integer[] numbers = new Integer[numbersAsStr.length];
 
-        List<Integer> evenNums = new ArrayList<>();
-        List<Integer> oddNums = new ArrayList<>();
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = Integer.parseInt(numbersAsStr[i]);
+        }
 
-        for (int number : numbers) {
-            if (number % 2 == 0) {
-                evenNums.add(number);
+        Comparator<Integer> integerComparator = (a, b) -> {
+            if (a % 2 == 0 && b % 2 != 0) {
+                return -1;
+            } else if (a % 2 != 0 && b % 2 == 0) {
+                return 1;
             } else {
-                oddNums.add(number);
+                return a - b;
             }
-        }
-        evenNums.sort(Integer::compareTo);
-        oddNums.sort(Integer::compareTo);
-        for (Integer evenNum : evenNums) {
-            System.out.print(evenNum + " ");
-        }
+        };
 
-        for (Integer oddNum : oddNums) {
-            System.out.print(oddNum + " ");
-        }
+        Arrays.sort(numbers, integerComparator);
+        Arrays.stream(numbers).forEach(x -> System.out.print(x + " "));
     }
 }
