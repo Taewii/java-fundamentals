@@ -1,0 +1,59 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static java.lang.System.in;
+
+public class p02_Crossfire {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        int[] size = Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        ArrayList<ArrayList<Integer>> matrix = new ArrayList<>();
+
+        int count = 1;
+        for (int i = 0; i < size[0]; i++) {
+            ArrayList<Integer> list = new ArrayList<>();
+            for (int j = 0; j < size[1]; j++) {
+                list.add(count++);
+            }
+            matrix.add(list);
+        }
+
+        String input;
+        while (!"Nuke it from orbit".equals(input = reader.readLine())) {
+            int[] dimensions = Arrays.stream(input.split(" ")).mapToInt(Integer::parseInt).toArray();
+
+            int row = dimensions[0];
+            int col = dimensions[1];
+            int radius = dimensions[2];
+
+            for (int i = row - radius; i <= row + radius; i++) {
+                if (isInRange(i, col, matrix) && i != row) {
+                    matrix.get(i).remove(col);
+                }
+            }
+
+            for (int i = col + radius; i >= col - radius; i--) {
+                if (isInRange(row, i, matrix)) {
+                    matrix.get(row).remove(i);
+                }
+            }
+
+            matrix.removeIf(ArrayList::isEmpty);
+        }
+
+        for (ArrayList<Integer> integers : matrix) {
+            for (Integer integer : integers) {
+                System.out.print(integer + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private static boolean isInRange(int row, int col, ArrayList<ArrayList<Integer>> matrix) {
+        return row >= 0 && row < matrix.size() && col >= 0 && col < matrix.get(row).size();
+    }
+}
