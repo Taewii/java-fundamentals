@@ -15,4 +15,15 @@ public class RedBloodCell extends Cell implements RedBloodCellInterface {
     public int getVelocity() {
         return this.velocity;
     }
+
+    @Override
+    public int getEnergy() {
+        return super.getHealth() + getVelocity();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s--------Health %d | Velocity %d | Energy %d%n", super.toString(), super.getHealth(),
+                this.getVelocity(), this.getEnergy());
+    }
 }

@@ -36,4 +36,12 @@ public class Cluster implements ClusterInterface {
     public Cell[][] getCells() {
         return this.cells;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("----Cluster %s", this.getId())).append(System.lineSeparator());
+        return sb.toString();
+    }
 }

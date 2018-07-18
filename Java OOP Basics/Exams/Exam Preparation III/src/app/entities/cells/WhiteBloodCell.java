@@ -15,4 +15,15 @@ public class WhiteBloodCell extends Cell implements WhiteBloodCellInterface {
     public int getSize() {
         return this.size;
     }
+
+    @Override
+    public int getEnergy() {
+        return (super.getHealth() + getSize() * 2);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s--------Health %d | Size %d | Energy %d%n", super.toString(), super.getHealth(),
+                this.getSize(), this.getEnergy());
+    }
 }

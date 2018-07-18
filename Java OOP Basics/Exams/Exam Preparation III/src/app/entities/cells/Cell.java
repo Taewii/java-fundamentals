@@ -35,4 +35,9 @@ public abstract class Cell implements CellInterface {
     public int getPositionCol() {
         return this.positionCol;
     }
+
+    @Override
+    public String toString() {
+        return String.format("o\t------Cell %s [%d, %d]", getId(), getPositionRow(), getPositionCol());
+    }
 }

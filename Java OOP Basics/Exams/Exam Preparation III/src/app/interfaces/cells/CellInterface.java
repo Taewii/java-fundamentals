@@ -9,4 +9,6 @@ public interface CellInterface {
     int getPositionRow();
 
     int getPositionCol();
+
+    int getEnergy();
 }
