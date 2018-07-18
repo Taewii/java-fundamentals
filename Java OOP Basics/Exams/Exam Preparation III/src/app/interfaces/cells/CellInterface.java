@@ -11,4 +11,10 @@ public interface CellInterface {
     int getPositionCol();
 
     int getEnergy();
+
+    void setHealth(int health);
+
+    void setPositionRow(int positionRow);
+
+    void setPositionCol(int positionCol);
 }

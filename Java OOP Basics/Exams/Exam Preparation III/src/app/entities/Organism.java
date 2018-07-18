@@ -13,17 +13,33 @@ public class Organism implements OrganismInterface {
     private String name;
     private List<Cluster> clusters;
 
-    public Organism() {
+    public Organism(String name) {
+        this.name = name;
         this.clusters = new ArrayList<>();
     }
 
-    protected List<Cluster> getClusters() {
+    @Override
+    public List<Cluster> getClusters() {
         return Collections.unmodifiableList(this.clusters);
     }
 
     @Override
     public String getName() {
         return this.name;
+    }
+
+    public Cluster getClusterById(String id) {
+        for (Cluster cluster : clusters) {
+            if (cluster.getId().equals(id)) {
+                return cluster;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void addCluster(Cluster cluster) {
+        this.clusters.add(cluster);
     }
 
     @Override
@@ -43,12 +59,27 @@ public class Organism implements OrganismInterface {
     }
 
     @Override
+    public boolean clusterExists(String id) {
+        for (Cluster cluster : clusters) {
+            if (cluster.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void moveClusterToTheEnd() {
+        Cluster cluster = this.getClusters().get(0);
+        this.clusters.remove(0);
+        this.clusters.add(cluster);
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Organism - ").append(this.getName()).append(System.lineSeparator());
-        sb.append("--Clusters: ").append(this.getClusters().size()).append(System.lineSeparator());
-        sb.append("--Cells: ").append(getCellsCount()).append(System.lineSeparator());
+        sb.append(String.format("Organism - %s%n--Clusters: %d%n--Cells: %d%n", this.getName(), this.getClusters().size(), getCellsCount()));
 
         for (Cluster cluster : clusters) {
             sb.append(cluster.toString());
@@ -56,6 +87,4 @@ public class Organism implements OrganismInterface {
 
         return sb.toString();
     }
-
-
 }

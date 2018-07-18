@@ -1,6 +1,8 @@
 package app.interfaces;
 
+import java.io.IOException;
+
 public interface EngineInterface {
 
-    void run();
+    void run() throws IOException;
 }

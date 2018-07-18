@@ -37,7 +37,22 @@ public abstract class Cell implements CellInterface {
     }
 
     @Override
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    @Override
+    public void setPositionRow(int positionRow) {
+        this.positionRow = positionRow;
+    }
+
+    @Override
+    public void setPositionCol(int positionCol) {
+        this.positionCol = positionCol;
+    }
+
+    @Override
     public String toString() {
-        return String.format("o\t------Cell %s [%d, %d]", getId(), getPositionRow(), getPositionCol());
+        return String.format("------Cell %s [%d,%d]%n", getId(), getPositionRow(), getPositionCol());
     }
 }

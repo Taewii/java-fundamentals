@@ -2,7 +2,7 @@ package app.entities.cells;
 
 import app.interfaces.cells.WhiteBloodCellInterface;
 
-public class WhiteBloodCell extends Cell implements WhiteBloodCellInterface {
+public class WhiteBloodCell extends BloodCell implements WhiteBloodCellInterface {
 
     private int size;
 
@@ -18,12 +18,12 @@ public class WhiteBloodCell extends Cell implements WhiteBloodCellInterface {
 
     @Override
     public int getEnergy() {
-        return (super.getHealth() + getSize() * 2);
+        return (super.getHealth() + getSize()) * 2;
     }
 
     @Override
     public String toString() {
-        return String.format("%s--------Health %d | Size %d | Energy %d%n", super.toString(), super.getHealth(),
+        return String.format("%s--------Health: %d | Size: %d | Energy: %d%n", super.toString(), super.getHealth(),
                 this.getSize(), this.getEnergy());
     }
 }

@@ -12,7 +12,7 @@ public class Fungi extends Microbe {
 
     @Override
     public String toString() {
-        return String.format("%s--------Health %d | Virulence %d | Energy %d%n", super.toString(), super.getHealth(),
+        return String.format("%s--------Health: %d | Virulence: %d | Energy: %d%n", super.toString(), super.getHealth(),
                 this.getVirulence(), this.getEnergy());
     }
 }

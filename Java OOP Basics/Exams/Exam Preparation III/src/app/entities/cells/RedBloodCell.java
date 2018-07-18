@@ -2,7 +2,7 @@ package app.entities.cells;
 
 import app.interfaces.cells.RedBloodCellInterface;
 
-public class RedBloodCell extends Cell implements RedBloodCellInterface {
+public class RedBloodCell extends BloodCell implements RedBloodCellInterface {
 
     private int velocity;
 
@@ -23,7 +23,7 @@ public class RedBloodCell extends Cell implements RedBloodCellInterface {
 
     @Override
     public String toString() {
-        return String.format("%s--------Health %d | Velocity %d | Energy %d%n", super.toString(), super.getHealth(),
+        return String.format("%s--------Health: %d | Velocity: %d | Energy: %d%n", super.toString(), super.getHealth(),
                 this.getVelocity(), this.getEnergy());
     }
 }
