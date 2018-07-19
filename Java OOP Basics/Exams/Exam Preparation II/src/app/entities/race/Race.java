@@ -40,4 +40,12 @@ public abstract class Race implements Track {
     public List<Car> getParticipants() {
         return Collections.unmodifiableList(this.participants);
     }
+
+    public int getSize() {
+        return this.participants.size();
+    }
+
+    public void addParticipant(Car car) {
+        this.participants.add(car);
+    }
 }

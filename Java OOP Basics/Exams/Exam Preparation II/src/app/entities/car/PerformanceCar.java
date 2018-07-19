@@ -16,14 +16,36 @@ public class PerformanceCar extends Car implements CarInterface {
         this.addOns = new ArrayList<>();
     }
 
+    public void setTunedHorsepower(int horsepower) {
+        super.setHorsepower(getHorsepower() + horsepower);
+    }
+
+//    public void setSuspension(int suspension) {
+//        super.setSuspension(suspension - ((suspension * 25) / 100));
+//    }
+
+    @Override
+    public void setHorsepower(int horsepower) {
+        super.setHorsepower(horsepower + ((horsepower * 50) / 100));
+    }
+
+    @Override
+    public void setSuspension(int suspension) {
+        super.setSuspension(suspension - ((suspension * 25) / 100));
+    }
+
     @Override
     public int getHorsepower() {
-        return (super.getHorsepower() * 50) / 100;
+        return super.getHorsepower();
     }
 
     @Override
     public int getSuspension() {
-        return super.getSuspension() - ((super.getSuspension() * 25) / 100);
+        return super.getSuspension();
+    }
+
+    public void addAddOn(String addOn) {
+        this.addOns.add(addOn);
     }
 
     public List<String> getAddOns() {
@@ -41,7 +63,7 @@ public class PerformanceCar extends Car implements CarInterface {
         if (this.addOns.size() > 0) {
             sb.append(String.join(", ", this.addOns)).append(System.lineSeparator());
         } else {
-            sb.append("None%n");
+            sb.append("None").append(System.lineSeparator());
         }
         return sb.toString();
     }

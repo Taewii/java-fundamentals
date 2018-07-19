@@ -10,8 +10,8 @@ public class ShowCar extends Car implements CarInterface {
         super(brand, model, yearOfProduction, horsepower, acceleration, suspension, durability);
     }
 
-    public void setStars(int stars) {
-        this.stars = stars;
+    public void addStars(int stars) {
+        this.stars += stars;
     }
 
     public int getStars() {

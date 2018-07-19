@@ -10,7 +10,7 @@ public interface Manager {
 
     void open(int id, String type, int length, String route, int prizePool);
 
-    void participate(int id);
+    void participate(int carId, int raceId);
 
     String start(int id);
 

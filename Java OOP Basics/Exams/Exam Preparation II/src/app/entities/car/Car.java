@@ -11,15 +11,52 @@ public abstract class Car implements CarInterface {
     private int acceleration;
     private int suspension;
     private int durability;
+    private boolean isParked;
+    private boolean participatesInARace;
 
     public Car(String brand, String model, int yearOfProduction, int horsepower, int acceleration, int suspension, int durability) {
         this.brand = brand;
         this.model = model;
         this.yearOfProduction = yearOfProduction;
-        this.horsepower = horsepower;
+        setHorsepower(horsepower);
         this.acceleration = acceleration;
-        this.suspension = suspension;
+        setSuspension(suspension);
         this.durability = durability;
+        this.isParked = false;
+        this.participatesInARace = false;
+
+    }
+
+    public void addHorsepowerFromTune(int horsepower) {
+        this.horsepower += horsepower;
+    }
+
+    public void addSuspensionFromTune(int suspension) {
+        this.suspension += suspension;
+    }
+
+    public void setHorsepower(int horsepower) {
+        this.horsepower = horsepower;
+    }
+
+    public void setSuspension(int suspension) {
+        this.suspension = suspension;
+    }
+
+    public void setParked(boolean parked) {
+        isParked = parked;
+    }
+
+    public boolean isParked() {
+        return isParked;
+    }
+
+    public void setParticipatesInARace(boolean participatesInARace) {
+        this.participatesInARace = participatesInARace;
+    }
+
+    public boolean participatesInARace() {
+        return participatesInARace;
     }
 
     @Override
