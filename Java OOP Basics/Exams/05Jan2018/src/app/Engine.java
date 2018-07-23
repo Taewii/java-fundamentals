@@ -61,7 +61,7 @@ public class Engine implements EngineInterface {
                     //TODO toStrings
                     List<Colonist> colonists = this.colony.getColonistsByFamilyId(args[1]);
                     for (Colonist colonist1 : colonists) {
-                        this.writer.writeLine(colonist1);
+                        this.writer.writeLine(colonist1.toString());
                     }
                     break;
             }
