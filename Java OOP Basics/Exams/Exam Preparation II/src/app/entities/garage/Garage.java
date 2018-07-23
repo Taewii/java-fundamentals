@@ -28,20 +28,22 @@ public class Garage implements GarageInterface {
 
     }
 
+    @Override
     public int getSize() {
         return this.parkedCars.size();
     }
 
+    @Override
     public void park(int id, Car car) {
-        car.setParked(true);
         this.parkedCars.put(id, car);
     }
 
+    @Override
     public void unpark(int id, Car car) {
-        car.setParked(false);
         this.parkedCars.remove(id);
     }
 
+    @Override
     public void tune(int tuneIndex, String addOn) {
         for (Car car : parkedCars.values()) {
             car.addHorsepowerFromTune(tuneIndex);

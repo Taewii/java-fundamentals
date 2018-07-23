@@ -38,7 +38,11 @@ public class Engine implements EngineInterface {
                     writer.write(this.manager.check(id));
                     break;
                 case "open":
-                    this.manager.open(id, args[2], Integer.parseInt(args[3]), args[4], Integer.parseInt(args[5]));
+                    if ("Circuit".equals(args[2]) || "TimeLimit".equals(args[2])) {
+                        this.manager.open(id, args[2], Integer.parseInt(args[3]), args[4], Integer.parseInt(args[5]), Integer.parseInt(args[6]));
+                    } else {
+                        this.manager.open(id, args[2], Integer.parseInt(args[3]), args[4], Integer.parseInt(args[5]));
+                    }
                     break;
                 case "participate":
                     this.manager.participate(id, Integer.parseInt(args[2]));

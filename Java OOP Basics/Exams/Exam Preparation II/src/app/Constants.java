@@ -14,4 +14,6 @@ public final class Constants {
     public static final String RACE_TYPE_CASUAL = "Casual";
     public static final String RACE_TYPE_DRAG = "Drag";
     public static final String RACE_TYPE_DRIFT = "Drift";
+    public static final String RACE_TYPE_CIRCUIT = "Circuit";
+    public static final String RACE_TYPE_TIME_LIMIT = "TimeLimit";
 }

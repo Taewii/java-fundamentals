@@ -16,14 +16,6 @@ public class PerformanceCar extends Car implements CarInterface {
         this.addOns = new ArrayList<>();
     }
 
-    public void setTunedHorsepower(int horsepower) {
-        super.setHorsepower(getHorsepower() + horsepower);
-    }
-
-//    public void setSuspension(int suspension) {
-//        super.setSuspension(suspension - ((suspension * 25) / 100));
-//    }
-
     @Override
     public void setHorsepower(int horsepower) {
         super.setHorsepower(horsepower + ((horsepower * 50) / 100));
