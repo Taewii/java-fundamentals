@@ -19,5 +19,4 @@ public interface ColonyInterface {
     int getPotential();
 
     String getCapacity();
-
 }

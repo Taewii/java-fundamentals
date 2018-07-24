@@ -11,4 +11,6 @@ public interface ColonistInterface {
     int getTalent();
 
     int getAge();
+
+    void grow(int years);
 }

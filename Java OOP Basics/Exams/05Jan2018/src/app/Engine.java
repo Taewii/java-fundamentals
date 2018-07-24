@@ -15,7 +15,7 @@ public class Engine implements EngineInterface {
     private ConsoleReader reader;
     private Colony colony;
 
-    public Engine() {
+    protected Engine() {
         writer = new ConsoleWriter();
         reader = new ConsoleReader();
         int[] capacities = Arrays.stream(reader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
@@ -33,10 +33,12 @@ public class Engine implements EngineInterface {
                 case "insert":
                     Colonist colonist;
                     if (args.length == 7) {
-                        colonist = ColonistFactory.createColonist(args[1], args[2], args[3], Integer.parseInt(args[4]),
+                        colonist = ColonistFactory.createColonist(args[1], args[2], args[3],
+                                Integer.parseInt(args[4]),
                                 Integer.parseInt(args[5]), args[6]);
                     } else {
-                        colonist = ColonistFactory.createColonist(args[1], args[2], args[3], Integer.parseInt(args[4]),
+                        colonist = ColonistFactory.createColonist(args[1], args[2], args[3],
+                                Integer.parseInt(args[4]),
                                 Integer.parseInt(args[5]));
                     }
                     try {
@@ -46,22 +48,32 @@ public class Engine implements EngineInterface {
                     }
                     break;
                 case "remove":
-                    //this.colony.removeColonist();
+                    if ("colonist".equals(args[1])) {
+                        this.colony.removeColonist(args[2], args[3]);
+                    } else {
+                        this.colony.removeFamily(args[2]);
+                    }
                     break;
                 case "grow":
-                    //this.colony.grow();
+                    this.colony.grow(Integer.parseInt(args[1]));
                     break;
                 case "potential":
-                    //this.colony.getPotential();
+                    this.writer.write(String.format("potential: %d%n", this.colony.getPotential()));
                     break;
                 case "capacity":
-                    //this.colony.getCapacity();
+                    this.writer.write(this.colony.getCapacity());
                     break;
                 case "family":
-                    //TODO toStrings
-                    List<Colonist> colonists = this.colony.getColonistsByFamilyId(args[1]);
-                    for (Colonist colonist1 : colonists) {
-                        this.writer.writeLine(colonist1.toString());
+                    try {
+                        List<Colonist> colonists = this.colony.getColonistsByFamilyId(args[1]);
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(args[1]).append(":").append(System.lineSeparator());
+                        for (Colonist colonist1 : colonists) {
+                            sb.append(colonist1);
+                        }
+                        this.writer.write(sb.toString());
+                    } catch (IllegalArgumentException ex) {
+                        this.writer.writeLine(ex.getMessage());
                     }
                     break;
             }

@@ -6,7 +6,7 @@ public abstract class Medic extends Colonist implements ColonistInterface {
 
     private String sign;
 
-    public Medic(String id, String familyId, int talent, int age, String sign) {
+    protected Medic(String id, String familyId, int talent, int age, String sign) {
         super(id, familyId, talent, age);
         this.sign = sign;
     }
@@ -16,7 +16,7 @@ public abstract class Medic extends Colonist implements ColonistInterface {
         return super.getTalent() + 2;
     }
 
-    public String getSign() {
+    protected String getSign() {
         return this.sign;
     }
 }

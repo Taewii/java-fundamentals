@@ -9,7 +9,7 @@ public abstract class Colonist implements ColonistInterface {
     private int talent;
     private int age;
 
-    public Colonist(String id, String familyId, int talent, int age) {
+    protected Colonist(String id, String familyId, int talent, int age) {
         this.id = id;
         this.familyId = familyId;
         this.talent = talent;
@@ -18,24 +18,33 @@ public abstract class Colonist implements ColonistInterface {
 
     public abstract int getPotential();
 
+    @Override
     public String getId() {
         return this.id;
     }
 
+    @Override
     public String getFamilyId() {
         return this.familyId;
     }
 
+    @Override
     public int getTalent() {
         return this.talent;
     }
 
+    @Override
     public int getAge() {
         return this.age;
     }
 
     @Override
+    public void grow(int years) {
+        this.age += years;
+    }
+
+    @Override
     public String toString() {
-        return super.toString();
+        return String.format("-%s: %d%n", this.getId(), this.getPotential());
     }
 }
