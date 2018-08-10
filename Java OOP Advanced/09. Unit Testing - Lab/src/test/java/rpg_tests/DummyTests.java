@@ -1,47 +1,53 @@
 package rpg_tests;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import rpg_lab.Axe;
 import rpg_lab.Dummy;
-import rpg_lab.Hero;
+import rpg_lab.interfaces.Target;
+import rpg_lab.interfaces.Weapon;
 
 public class DummyTests {
 
+    private static final int AXE_ATTACK = 10;
+    private static final int AXE_DURABILITY = 10;
+    private static final int DUMMY_HEALTH = 20;
+    private static final int DUMMY_XP = 20;
+
+    private Weapon weapon;
+    private Target target;
+
+    @Before
+    public void startUp() {
+        this.weapon = new Axe(AXE_ATTACK, AXE_DURABILITY);
+        this.target = new Dummy(DUMMY_HEALTH, DUMMY_XP);
+    }
+
     @Test
-    public void dummyLosesHealthWhenAttacked() {
-        Axe axe = new Axe(10, 10);
-        Dummy dummy = new Dummy(20, 20);
+    public void targetLosesHealthWhenAttacked() {
+        this.weapon.attack(this.target);
 
-        axe.attack(dummy);
-
-        Assert.assertEquals(10, dummy.getHealth());
+        Assert.assertEquals(10, this.target.getHealth());
     }
 
     @Test(expected = IllegalStateException.class)
     public void deadDummyThrowsExceptionWhenAttacked() {
-        Axe axe = new Axe(10, 10);
-        Dummy dummy = new Dummy(5, 20);
-
-        axe.attack(dummy);
-        axe.attack(dummy);
+        this.weapon.attack(this.target);
+        this.weapon.attack(this.target);
+        this.weapon.attack(this.target);
     }
 
     @Test
     public void deadDummyCanGiveExperience() {
-        Dummy dummy = new Dummy(5, 20);
-        Hero hero = new Hero("gosho");
+        this.weapon.attack(this.target);
+        this.weapon.attack(this.target);
 
-        hero.attack(dummy);
-        Assert.assertEquals(20, hero.getExperience());
+        Assert.assertEquals(20, target.giveExperience());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void aliveDummyCantGiveExperience() {
-        Dummy dummy = new Dummy(20, 20);
-        Hero hero = new Hero("gosho");
-
-        hero.attack(dummy);
-        Assert.assertEquals(0, hero.getExperience());
+        this.target.giveExperience();
     }
 }
