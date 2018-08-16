@@ -1,14 +1,13 @@
 package models;
 
-import Utility.Constants;
-import Utility.Validator;
-import contracts.IModelable;
-import contracts.IRace;
+import utility.Constants;
+import utility.Validator;
+import contracts.Modelable;
+import contracts.Race;
 
 import java.util.List;
-import java.util.stream.IntStream;
 
-public final class MotorBoat implements IModelable {
+public final class MotorBoat implements Modelable {
     private String model;
     private int weight;
     private int oars;
@@ -35,7 +34,7 @@ public final class MotorBoat implements IModelable {
     }
 
     public void setModel(String model) {
-        Validator.ValidateModelLength(model, Constants.MinBoatModelLength);
+        Validator.ValidateModelLength(model, Constants.MIN_BOAT_MODEL_LENGTH);
         this.model = model;
     }
 
@@ -63,7 +62,7 @@ public final class MotorBoat implements IModelable {
 
     public void setSailEfficiency(int sailEfficiency) {
         if (sailEfficiency < 1 || sailEfficiency > 100) {
-            throw new IllegalArgumentException(Constants.IncorrectSailEfficiencyMessage);
+            throw new IllegalArgumentException(Constants.INCORRECT_SAIL_EFFICIENCY_MESSAGE);
         }
         this.sailEfficiency = sailEfficiency;
     }
@@ -93,7 +92,7 @@ public final class MotorBoat implements IModelable {
         this.sterndriveEngines = sterndriveEngines;
     }
 
-    public double CalculateRaceSpeed(IRace race) {
+    public double CalculateRaceSpeed(Race race) {
         //if (this.getJetEngines().size() + this.getSterndriveEngines().size() == 2) {
         //    var speed = this.JetEngines.Sum(x = > x.Output)+this.SterndriveEngines.Sum(x = > x.Output)
         //    -this.Weight + (race.OceanCurrentSpeed / 5d);

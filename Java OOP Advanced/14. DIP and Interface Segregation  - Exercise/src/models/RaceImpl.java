@@ -1,27 +1,27 @@
 package models;
 
-import Utility.Constants;
-import Utility.Validator;
-import contracts.IRace;
+import utility.Constants;
+import utility.Validator;
 import exeptions.DuplicateModelException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Race implements IRace {
+public class RaceImpl implements contracts.Race {
     private int distance;
     private int windSpeed;
     private int oseanCurrentSpeed;
     private Boolean allowsMotorBoats;
-    private HashMap<String, MotorBoat> registeredBoats;
+    private Map<String, MotorBoat> registeredBoats;
 
-    public Race(int distance, int windSpeed, int oceanCurrentSpeed, Boolean allowsMotorBoats) {
+    public RaceImpl(int distance, int windSpeed, int oceanCurrentSpeed, Boolean allowsMotorBoats) {
         this.setDistance(distance);
         this.setWindSpeed(windSpeed);
         this.setOseanCurrentSpeed(oceanCurrentSpeed);
         this.setAllowsMotorBoats(allowsMotorBoats);
-        this.registeredBoats = new HashMap<String, MotorBoat>();
+        this.registeredBoats = new HashMap<>();
     }
 
     @Override
@@ -59,18 +59,18 @@ public class Race implements IRace {
         this.allowsMotorBoats = allowsMotorBoats;
     }
 
-    protected HashMap<String, MotorBoat> getRegisteredBoats() {
+    protected Map<String, MotorBoat> getRegisteredBoats() {
         return this.registeredBoats;
     }
 
     public void AddParticipant(MotorBoat boat) throws DuplicateModelException {
         if (this.getRegisteredBoats().containsKey(boat.getModel())) {
-            throw new DuplicateModelException(Constants.DuplicateModelMessage);
+            throw new DuplicateModelException(Constants.DUPLICATE_MODEL_MESSAGE);
         }
         this.registeredBoats.put(boat.getModel(), boat);
     }
 
     public List<MotorBoat> GetParticipants() {
-        return new ArrayList<MotorBoat>(this.registeredBoats.values());
+        return new ArrayList<>(this.registeredBoats.values());
     }
 }

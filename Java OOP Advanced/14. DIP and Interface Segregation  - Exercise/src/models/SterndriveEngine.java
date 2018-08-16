@@ -1,10 +1,10 @@
 package models;
 
-import Utility.Constants;
-import Utility.Validator;
-import contracts.IModelable;
+import utility.Constants;
+import utility.Validator;
+import contracts.Modelable;
 
-public class SterndriveEngine implements IModelable
+public class SterndriveEngine implements Modelable
 {
     private static final int Multiplier = 7;
 
@@ -29,7 +29,7 @@ public class SterndriveEngine implements IModelable
     }
 
     public void setModel(String model) {
-        Validator.ValidateModelLength(model, Constants.MinBoatEngineModelLength);
+        Validator.ValidateModelLength(model, Constants.MIN_BOAT_ENGINE_MODEL_LENGTH);
         this.model = model;
     }
 

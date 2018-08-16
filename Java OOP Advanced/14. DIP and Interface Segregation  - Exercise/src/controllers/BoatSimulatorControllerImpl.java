@@ -1,33 +1,39 @@
 package controllers;
 
-import Utility.Constants;
-import contracts.IBoatSimulatorController;
-import contracts.IModelable;
-import contracts.IRace;
+import utility.Constants;
+import contracts.Modelable;
+import contracts.Race;
 import database.BoatSimulatorDatabase;
 import enumeration.EngineType;
 import exeptions.*;
 import models.JetEngine;
 import models.MotorBoat;
-import models.Race;
+import models.RaceImpl;
 import models.SterndriveEngine;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
-public class BoatSimulatorController implements IBoatSimulatorController {
+public class BoatSimulatorControllerImpl implements contracts.BoatSimulatorController {
     private LinkedHashMap<Double, MotorBoat> map;
     private BoatSimulatorDatabase database;
-    private IRace currentRace;
+    private Race currentRace;
 
-    public BoatSimulatorController(BoatSimulatorDatabase database, IRace currentRace) {
+    public BoatSimulatorControllerImpl(BoatSimulatorDatabase database, Race currentRace) {
         this.setDatabase(database);
         this.setCurrentRace(currentRace);
     }
 
-    public BoatSimulatorController() {
-        this.setDatabase(new BoatSimulatorDatabase());
-        this.setCurrentRace(null);
+    public void setDatabase(BoatSimulatorDatabase database) {
+        this.database = database;
+    }
+
+    @Override
+    public Race getCurrentRace() {
+        return this.currentRace;
+    }
+
+    public void setCurrentRace(Race currentRace) {
+        this.currentRace = currentRace;
     }
 
     @Override
@@ -40,31 +46,17 @@ public class BoatSimulatorController implements IBoatSimulatorController {
         return null;
     }
 
-
-    public void setDatabase(BoatSimulatorDatabase database) {
-        this.database = database;
-    }
-
-    @Override
-    public IRace getCurrentRace() {
-        return this.currentRace;
-    }
-
-    public void setCurrentRace(IRace currentRace) {
-        this.currentRace = currentRace;
-    }
-
     public String CreateBoatEngine(String model, int horsepower, int displacement, EngineType engineType) throws DuplicateModelException {
-        IModelable engine;
+        Modelable engine;
         switch (engineType) {
-            case Jet:
+            case JET:
                 engine = new JetEngine(model, horsepower, displacement);
                 break;
-            case Sterndrive:
+            case STERNDRIVE:
                 engine = new SterndriveEngine(model, horsepower, displacement);
                 break;
             default:
-                throw new NotImplementedException();
+                return null;
         }
 
         this.database.getEngines().Add(engine);
@@ -76,13 +68,13 @@ public class BoatSimulatorController implements IBoatSimulatorController {
     }
 
     public String CreateRowBoat(String model, int weight, int oars) throws DuplicateModelException {
-        MotorBoat boat = new MotorBoat(model, weight, 1, oars, 1, new ArrayList<JetEngine>(), new ArrayList<SterndriveEngine>(), false);
+        MotorBoat boat = new MotorBoat(model, weight, 1, oars, 1, new ArrayList<>(), new ArrayList<>(), false);
         this.database.getBoats().Add(boat);
         return String.format("Row boat with model %s registered successfully.", model);
     }
 
     public String CreateSailBoat(String model, int weight, int sailEfficiency) throws DuplicateModelException {
-        MotorBoat boat = new MotorBoat(model, weight, sailEfficiency, 1, 1, new ArrayList<JetEngine>(), new ArrayList<SterndriveEngine>(), true);
+        MotorBoat boat = new MotorBoat(model, weight, sailEfficiency, 1, 1, new ArrayList<>(), new ArrayList<>(), true);
         this.database.getBoats().Add(boat);
         return String.format("Sail boat with model %s registered successfully.", model);
     }
@@ -97,13 +89,13 @@ public class BoatSimulatorController implements IBoatSimulatorController {
 
     public String CreateYacht(String model, int weight, String engineModel, int cargoWeight) throws NonExistantModelException, DuplicateModelException {
         JetEngine engine = (JetEngine) this.database.getEngines().GetItem(engineModel);
-        MotorBoat boat = new MotorBoat(model, weight, 1, 1, cargoWeight, Arrays.asList(engine), new ArrayList<SterndriveEngine>(), false);
+        MotorBoat boat = new MotorBoat(model, weight, 1, 1, cargoWeight, Arrays.asList(engine), new ArrayList<>(), false);
         this.database.getBoats().Add(boat);
         return String.format("Yacht with model %s registered successfully.", model);
     }
 
     public String OpenRace(int distance, int windSpeed, int oceanCurrentSpeed, Boolean allowsMotorboats) throws RaceAlreadyExistsException {
-        IRace race = new Race(distance, windSpeed, oceanCurrentSpeed, allowsMotorboats);
+        Race race = new RaceImpl(distance, windSpeed, oceanCurrentSpeed, allowsMotorboats);
         this.ValidateRaceIsEmpty();
         this.currentRace = race;
         return
@@ -116,19 +108,18 @@ public class BoatSimulatorController implements IBoatSimulatorController {
         MotorBoat boat = this.database.getBoats().GetItem(model);
         this.ValidateRaceIsSet();
         if (!this.currentRace.getAllowsMotorboats() && boat instanceof MotorBoat) {
-            throw new IllegalArgumentException(Constants.IncorrectBoatTypeMessage);
+            throw new IllegalArgumentException(Constants.INCORRECT_BOAT_TYPE_MESSAGE);
         }
         this.currentRace.AddParticipant(boat);
-        return String.format("Boat with model %s has signed up for the current Race.", model);
+        return String.format("Boat with model %s has signed up for the current RaceImpl.", model);
     }
 
     public String StartRace() throws InsufficientContestantsException, NoSetRaceException {
         this.ValidateRaceIsSet();
         List<MotorBoat> participants = this.currentRace.GetParticipants();
         if (participants.size() < 3) {
-            throw new InsufficientContestantsException(Constants.InsufficientContestantsMessage);
+            throw new InsufficientContestantsException(Constants.INSUFFICIENT_CONTESTANTS_MESSAGE);
         }
-
 
         for (int i = 0; i < 3; i++) {
             FindFastest(participants);
@@ -159,10 +150,10 @@ public class BoatSimulatorController implements IBoatSimulatorController {
         return null;
     }
 
-    public String getStatistic() {
-        //TODO Bonus Task Implement me
-        throw new NotImplementedException();
-    }
+//    public String getStatistic() {
+//        //TODO Bonus Task Implement me
+//        throw new NotImplementedException();
+//    }
 
     private void FindFastest(List<MotorBoat> participants) {
         Double bestTime = 0.0;
@@ -182,13 +173,13 @@ public class BoatSimulatorController implements IBoatSimulatorController {
 
     private void ValidateRaceIsSet() throws NoSetRaceException {
         if (this.currentRace == null) {
-            throw new NoSetRaceException(Constants.NoSetRaceMessage);
+            throw new NoSetRaceException(Constants.NO_SET_RACE_MESSAGE);
         }
     }
 
     private void ValidateRaceIsEmpty() throws RaceAlreadyExistsException {
         if (this.currentRace != null) {
-            throw new RaceAlreadyExistsException(Constants.RaceAlreadyExistsMessage);
+            throw new RaceAlreadyExistsException(Constants.RACE_ALREADY_EXISTS_MESSAGE);
         }
     }
 }

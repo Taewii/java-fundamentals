@@ -1,11 +1,10 @@
 package models;
 
-import Utility.Constants;
-import Utility.Validator;
-import contracts.IModelable;
+import utility.Constants;
+import utility.Validator;
+import contracts.Modelable;
 
-public class JetEngine implements IModelable
-{
+public class JetEngine implements Modelable {
     private static final int Multiplier = 5;
 
     public int cachedOutput;
@@ -16,8 +15,7 @@ public class JetEngine implements IModelable
 
     private int displacement;
 
-    public JetEngine(String model, int horsepower, int displacement)
-    {
+    public JetEngine(String model, int horsepower, int displacement) {
         this.setModel(model);
         this.setHorsepower(horsepower);
         this.setDisplacement(displacement);
@@ -29,13 +27,12 @@ public class JetEngine implements IModelable
     }
 
     public void setModel(String model) {
-        Validator.ValidateModelLength(model, Constants.MinBoatEngineModelLength);
+        Validator.ValidateModelLength(model, Constants.MIN_BOAT_ENGINE_MODEL_LENGTH);
         this.model = model;
     }
 
     public int getOutput() {
-        if (this.cachedOutput != 0)
-        {
+        if (this.cachedOutput != 0) {
             return this.cachedOutput;
         }
 

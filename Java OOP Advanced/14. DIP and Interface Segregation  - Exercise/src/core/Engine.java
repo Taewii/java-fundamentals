@@ -1,8 +1,8 @@
-package Core;
+package core;
 
-import contracts.IBoatSimulatorController;
-import contracts.ICommandHandler;
-import contracts.IRace;
+import contracts.BoatSimulatorController;
+import contracts.CommandHandler;
+import contracts.Race;
 import database.BoatSimulatorDatabase;
 import exeptions.*;
 
@@ -15,22 +15,12 @@ import java.util.stream.Collectors;
 public class Engine {
     private CommandHandler commandHandler;
 
-    public Engine(CommandHandler commandHandler)
-    {
+    public Engine(CommandHandler commandHandler) {
         this.commandHandler = commandHandler;
     }
 
-    public Engine()
-    {
-        this.commandHandler = new CommandHandler();
-    }
-
-    public ICommandHandler getCommandHandler;
-
-    public void Run()
-    {
-        while (true)
-        {
+    public void Run() {
+        while (true) {
             Scanner scanner = new Scanner(System.in);
             String line = scanner.nextLine();
             String name = "";
@@ -44,13 +34,10 @@ public class Engine {
             name = tokens.get(0);
             parameters = tokens.stream().skip(1).collect(Collectors.toList());
 
-            try
-            {
+            try {
                 String commandResult = this.commandHandler.ExecuteCommand(name, parameters);
                 System.out.println(commandResult);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 System.out.println(ex.getMessage());
             }
 
@@ -59,9 +46,9 @@ public class Engine {
     }
 
     public static void main(String[] args) {
-        IBoatSimulatorController ctrl = new IBoatSimulatorController() {
+        BoatSimulatorController ctrl = new BoatSimulatorController() {
             @Override
-            public IRace getCurrentRace() {
+            public Race getCurrentRace() {
                 return null;
             }
 
@@ -117,8 +104,8 @@ public class Engine {
             }
         };
 
-        CommandHandler commandHandler = new CommandHandler(ctrl);
-        Engine engine = new Engine();
-        engine.Run();
+        CommandHandlerImpl commandHandler = new CommandHandlerImpl(ctrl);
+//        Engine engine = new Engine();
+//        engine.Run();
     }
 }
