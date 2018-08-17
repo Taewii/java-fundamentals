@@ -12,7 +12,7 @@ public class Constants
 
     public static final String DUPLICATE_MODEL_MESSAGE = "An entry for the given model already exists.";
 
-    public static final String NON_EXISTANT_MODEL_MESSAGE = "The specified model does not exist.";
+    public static final String NON_EXISTENT_MODEL_MESSAGE = "The specified model does not exist.";
 
     public static final String RACE_ALREADY_EXISTS_MESSAGE = "The current race has already been set.";
 

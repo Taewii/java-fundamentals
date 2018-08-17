@@ -1,12 +1,11 @@
 package contracts;
 
 import exeptions.DuplicateModelException;
-import models.MotorBoat;
 
-import java.util.List;
+import java.util.Collection;
 
-public interface Race
-{
+public interface Race {
+
     int getDistance();
 
     int getWindSpeed();
@@ -15,7 +14,7 @@ public interface Race
 
     Boolean getAllowsMotorboats();
 
-    void AddParticipant(MotorBoat boat) throws DuplicateModelException;
+    void addParticipant(Boat boat) throws DuplicateModelException;
 
-    List<MotorBoat> GetParticipants();
+    Collection<Boat> getParticipants();
 }

@@ -1,65 +1,90 @@
 package controllers;
 
+import contracts.Boat;
+import contracts.BoatEngine;
+import contracts.BoatSimulatorController;
+import models.RaceImpl;
+import models.boats.PowerBoat;
+import models.boats.RowBoat;
+import models.boats.SailBoat;
+import models.boats.Yacht;
 import utility.Constants;
-import contracts.Modelable;
 import contracts.Race;
 import database.BoatSimulatorDatabase;
-import enumeration.EngineType;
 import exeptions.*;
-import models.JetEngine;
-import models.MotorBoat;
-import models.RaceImpl;
-import models.SterndriveEngine;
+import models.engines.JetEngine;
+import models.engines.SterndriveEngine;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class BoatSimulatorControllerImpl implements contracts.BoatSimulatorController {
-    private LinkedHashMap<Double, MotorBoat> map;
+public class BoatSimulatorControllerImpl implements BoatSimulatorController {
+
+    private Map<Boat, Double> finishedBoats;
+
+    private Map<Boat, Double> unFinishedBoats;
+
     private BoatSimulatorDatabase database;
+
     private Race currentRace;
 
-    public BoatSimulatorControllerImpl(BoatSimulatorDatabase database, Race currentRace) {
-        this.setDatabase(database);
-        this.setCurrentRace(currentRace);
-    }
-
-    public void setDatabase(BoatSimulatorDatabase database) {
+    public BoatSimulatorControllerImpl(BoatSimulatorDatabase database) {
         this.database = database;
+        this.finishedBoats = new LinkedHashMap<>();
+        this.unFinishedBoats = new LinkedHashMap<>();
+    }
+
+    private String isFinished(Double time) {
+        if (time <= 0 || time == Double.POSITIVE_INFINITY || time == Double.NEGATIVE_INFINITY) {
+            return "Did not finish!";
+        }
+        return String.format("%.2f sec", time);
+    }
+
+    private void findFastest(Collection<Boat> participants) {
+        for (Boat participant : participants) {
+            Double speed = participant.calculateRaceSpeed(this.currentRace);
+            Double time = this.currentRace.getDistance() / speed;
+
+            if (time <= 0) {
+                this.unFinishedBoats.put(participant, time);
+            } else {
+                this.finishedBoats.put(participant, time);
+            }
+        }
+
+        if (this.finishedBoats.size() >= 3) {
+            this.unFinishedBoats.clear();
+        }
+    }
+
+    private void validateRaceIsSet() throws NoSetRaceException {
+        if (this.currentRace == null) {
+            throw new NoSetRaceException(Constants.NO_SET_RACE_MESSAGE);
+        }
+    }
+
+    private void validateRaceIsEmpty() throws RaceAlreadyExistsException {
+        if (this.currentRace != null) {
+            throw new RaceAlreadyExistsException(Constants.RACE_ALREADY_EXISTS_MESSAGE);
+        }
     }
 
     @Override
-    public Race getCurrentRace() {
-        return this.currentRace;
-    }
-
-    public void setCurrentRace(Race currentRace) {
-        this.currentRace = currentRace;
-    }
-
-    @Override
-    public BoatSimulatorDatabase getDatabase() {
-        return this.database;
-    }
-
-    @Override
-    public String CreateBoatEngine(String model, int horsepower, int displacement, String engineType) {
-        return null;
-    }
-
-    public String CreateBoatEngine(String model, int horsepower, int displacement, EngineType engineType) throws DuplicateModelException {
-        Modelable engine;
+    public String createBoatEngine(String model, int horsepower, int displacement, String engineType) throws DuplicateModelException {
+        BoatEngine engine;
         switch (engineType) {
-            case JET:
+            case "JET":
                 engine = new JetEngine(model, horsepower, displacement);
                 break;
-            case STERNDRIVE:
+            case "STERNDRIVE":
                 engine = new SterndriveEngine(model, horsepower, displacement);
                 break;
             default:
                 return null;
         }
 
-        this.database.getEngines().Add(engine);
+        this.database.getEngines().add(engine);
         return String.format(
                 "Engine model %s with %s HP and displacement %s cm3 created successfully.",
                 model,
@@ -67,119 +92,133 @@ public class BoatSimulatorControllerImpl implements contracts.BoatSimulatorContr
                 displacement);
     }
 
-    public String CreateRowBoat(String model, int weight, int oars) throws DuplicateModelException {
-        MotorBoat boat = new MotorBoat(model, weight, 1, oars, 1, new ArrayList<>(), new ArrayList<>(), false);
-        this.database.getBoats().Add(boat);
+    @Override
+    public String createRowBoat(String model, int weight, int oars) throws DuplicateModelException {
+        Boat boat = new RowBoat(model, weight, oars);
+        this.database.getBoats().add(boat);
         return String.format("Row boat with model %s registered successfully.", model);
     }
 
-    public String CreateSailBoat(String model, int weight, int sailEfficiency) throws DuplicateModelException {
-        MotorBoat boat = new MotorBoat(model, weight, sailEfficiency, 1, 1, new ArrayList<>(), new ArrayList<>(), true);
-        this.database.getBoats().Add(boat);
+    @Override
+    public String createSailBoat(String model, int weight, int sailEfficiency) throws DuplicateModelException {
+        Boat boat = new SailBoat(model, weight, sailEfficiency);
+        this.database.getBoats().add(boat);
         return String.format("Sail boat with model %s registered successfully.", model);
     }
 
-    public String CreatePowerBoat(String model, int weight, String firstEngineModel, String secondEngineModel) throws NonExistantModelException, DuplicateModelException {
-        JetEngine firstEngine = (JetEngine) this.database.getEngines().GetItem(firstEngineModel);
-        SterndriveEngine secondEngine = (SterndriveEngine) this.database.getEngines().GetItem(secondEngineModel);
-        MotorBoat boat = new MotorBoat(model, weight, 1, 1, 1, Arrays.asList(firstEngine), Arrays.asList(secondEngine), false);
-        this.database.getBoats().Add(boat);
+    @Override
+    public String createPowerBoat(String model, int weight, String firstEngineModel, String secondEngineModel) throws NonExistentModelException, DuplicateModelException {
+        BoatEngine firstEngine = this.database.getEngines().getItem(firstEngineModel);
+        BoatEngine secondEngine = this.database.getEngines().getItem(secondEngineModel);
+        Boat boat = new PowerBoat(model, weight, firstEngine, secondEngine);
+        this.database.getBoats().add(boat);
         return String.format("Power boat with model %s registered successfully.", model);
     }
 
-    public String CreateYacht(String model, int weight, String engineModel, int cargoWeight) throws NonExistantModelException, DuplicateModelException {
-        JetEngine engine = (JetEngine) this.database.getEngines().GetItem(engineModel);
-        MotorBoat boat = new MotorBoat(model, weight, 1, 1, cargoWeight, Arrays.asList(engine), new ArrayList<>(), false);
-        this.database.getBoats().Add(boat);
+    @Override
+    public String createYacht(String model, int weight, String engineModel, int cargoWeight) throws NonExistentModelException, DuplicateModelException {
+        BoatEngine engine = this.database.getEngines().getItem(engineModel);
+        Boat boat = new Yacht(model, weight, cargoWeight, engine);
+        this.database.getBoats().add(boat);
         return String.format("Yacht with model %s registered successfully.", model);
     }
 
-    public String OpenRace(int distance, int windSpeed, int oceanCurrentSpeed, Boolean allowsMotorboats) throws RaceAlreadyExistsException {
-        Race race = new RaceImpl(distance, windSpeed, oceanCurrentSpeed, allowsMotorboats);
-        this.ValidateRaceIsEmpty();
-        this.currentRace = race;
+    @Override
+    public String openRace(int distance, int windSpeed, int oceanCurrentSpeed, Boolean allowsBoats) throws RaceAlreadyExistsException {
+        this.validateRaceIsEmpty();
+        this.currentRace = new RaceImpl(distance, windSpeed, oceanCurrentSpeed, allowsBoats);
+
         return
                 String.format(
-                        "A new race with distance %s meters, wind speed %sm/s and ocean current speed %s m/s has been set.",
+                        "A new race with distance %s meters, wind speed %s m/s and ocean current speed %s m/s has been set.",
                         distance, windSpeed, oceanCurrentSpeed);
     }
 
-    public String SignUpBoat(String model) throws NonExistantModelException, DuplicateModelException, NoSetRaceException {
-        MotorBoat boat = this.database.getBoats().GetItem(model);
-        this.ValidateRaceIsSet();
-        if (!this.currentRace.getAllowsMotorboats() && boat instanceof MotorBoat) {
+    @Override
+    public String signUpBoat(String model) throws NonExistentModelException, DuplicateModelException, NoSetRaceException {
+        this.validateRaceIsSet();
+
+        Boat boat = this.database.getBoats().getItem(model);
+
+        if (!this.currentRace.getAllowsMotorboats() && boat.isMotorBoat()) {
             throw new IllegalArgumentException(Constants.INCORRECT_BOAT_TYPE_MESSAGE);
         }
-        this.currentRace.AddParticipant(boat);
-        return String.format("Boat with model %s has signed up for the current RaceImpl.", model);
+
+        this.currentRace.addParticipant(boat);
+        return String.format("Boat with model %s has signed up for the current Race.", model);
     }
 
-    public String StartRace() throws InsufficientContestantsException, NoSetRaceException {
-        this.ValidateRaceIsSet();
-        List<MotorBoat> participants = this.currentRace.GetParticipants();
+    @Override
+    public String startRace() throws InsufficientContestantsException, NoSetRaceException {
+        this.validateRaceIsSet();
+        Collection<Boat> participants = this.currentRace.getParticipants();
         if (participants.size() < 3) {
             throw new InsufficientContestantsException(Constants.INSUFFICIENT_CONTESTANTS_MESSAGE);
         }
 
-        for (int i = 0; i < 3; i++) {
-            FindFastest(participants);
-        }
+        this.findFastest(participants);
+
+        String[] places = {"First", "Second", "Third"};
+        final int[] index = {0};
 
         StringBuilder result = new StringBuilder();
-        for (Map.Entry<Double, MotorBoat> doubleMotorBoatEntry : map.entrySet()) {
-            result.append(String.format("First place: %s Model: %s Time: %s",
-                    doubleMotorBoatEntry.getValue().getClass().getSimpleName().toString(),
-                    doubleMotorBoatEntry.getValue().getModel(),
-                    isFinished(doubleMotorBoatEntry.getKey())));
+
+        this.finishedBoats
+                .entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .forEach(boat -> {
+                    if (index[0] < 3) {
+                        result.append(String.format("%s place: %s Model: %s Time: %s",
+                                places[index[0]++],
+                                boat.getKey().getClass().getSimpleName(),
+                                boat.getKey().getModel(),
+                                this.isFinished(boat.getValue())))
+                                .append(System.lineSeparator());
+                    }
+                });
+
+        for (Map.Entry<Boat, Double> doubleBoatEntry : this.unFinishedBoats.entrySet()) {
+            if (index[0] == 3) {
+                break;
+            }
+            result.append(String.format("%s place: %s Model: %s Time: Did not finish!",
+                    places[index[0]++],
+                    doubleBoatEntry.getKey().getClass().getSimpleName(),
+                    doubleBoatEntry.getKey().getModel()))
+                    .append(System.lineSeparator());
         }
 
         this.currentRace = null;
+        this.finishedBoats.clear();
+        this.unFinishedBoats.clear();
 
-        return result.toString();
-    }
-
-    private String isFinished(Double key) {
-        if (key == Double.NEGATIVE_INFINITY) {
-            return "Did not finish!";
-        }
-        return String.format("%f.2 sec", key);
+        return result.toString().trim();
     }
 
     @Override
-    public String GetStatistic() {
-        return null;
-    }
+    public String getStatistic() {
+        Collection<Boat> participants = this.currentRace.getParticipants();
+        int countOfParticipants = participants.size();
 
-//    public String getStatistic() {
-//        //TODO Bonus Task Implement me
-//        throw new NotImplementedException();
-//    }
+        StringBuilder statistic = new StringBuilder();
 
-    private void FindFastest(List<MotorBoat> participants) {
-        Double bestTime = 0.0;
-        MotorBoat winner = null;
-        for (MotorBoat participant : participants) {
-            Double speed = participant.CalculateRaceSpeed(this.currentRace);
-            Double time = this.currentRace.getDistance() / speed;
-            if (time < bestTime) {
-                bestTime = time;
-                winner = participant;
-            }
-        }
+        participants
+                .stream()
+                .collect(Collectors.groupingBy((Boat boat) -> boat.getClass().getSimpleName()))
+                .entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey))
+                .forEach(boatsGroup -> {
+                    String boatType = boatsGroup.getKey();
+                    double percentage = ((double) boatsGroup.getValue().size() / countOfParticipants) * 100d;
+                    statistic
+                            .append(String.format("%s -> %.2f%%",
+                                    boatType,
+                                    percentage))
+                            .append(System.lineSeparator());
+                });
 
-        map.put(bestTime, winner);
-        participants.remove(winner);
-    }
-
-    private void ValidateRaceIsSet() throws NoSetRaceException {
-        if (this.currentRace == null) {
-            throw new NoSetRaceException(Constants.NO_SET_RACE_MESSAGE);
-        }
-    }
-
-    private void ValidateRaceIsEmpty() throws RaceAlreadyExistsException {
-        if (this.currentRace != null) {
-            throw new RaceAlreadyExistsException(Constants.RACE_ALREADY_EXISTS_MESSAGE);
-        }
+        return statistic.toString().trim();
     }
 }

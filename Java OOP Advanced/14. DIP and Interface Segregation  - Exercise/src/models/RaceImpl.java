@@ -1,76 +1,68 @@
 package models;
 
+import contracts.Boat;
+import contracts.Race;
+import exeptions.DuplicateModelException;
 import utility.Constants;
 import utility.Validator;
-import exeptions.DuplicateModelException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class RaceImpl implements contracts.Race {
+public class RaceImpl implements Race {
+
     private int distance;
+
     private int windSpeed;
-    private int oseanCurrentSpeed;
+
+    private int oceanCurrentSpeed;
+
     private Boolean allowsMotorBoats;
-    private Map<String, MotorBoat> registeredBoats;
+
+    private Map<String, Boat> registeredBoats;
 
     public RaceImpl(int distance, int windSpeed, int oceanCurrentSpeed, Boolean allowsMotorBoats) {
         this.setDistance(distance);
-        this.setWindSpeed(windSpeed);
-        this.setOseanCurrentSpeed(oceanCurrentSpeed);
-        this.setAllowsMotorBoats(allowsMotorBoats);
-        this.registeredBoats = new HashMap<>();
-    }
-
-    @Override
-    public int getDistance() {
-        return distance;
+        this.windSpeed = windSpeed;
+        this.oceanCurrentSpeed = oceanCurrentSpeed;
+        this.allowsMotorBoats = allowsMotorBoats;
+        this.registeredBoats = new LinkedHashMap<>();
     }
 
     private void setDistance(int distance) {
-        Validator.ValidatePropertyValue(distance, "Distance");
+        Validator.validatePropertyValue(distance, "Distance");
         this.distance = distance;
     }
 
     @Override
+    public int getDistance() {
+        return this.distance;
+    }
+    
+    @Override
     public int getWindSpeed() {
-        return windSpeed;
+        return this.windSpeed;
     }
 
-    private void setWindSpeed(int windSpeed) {
-        this.windSpeed = windSpeed;
-    }
-
+    @Override
     public int getOceanCurrentSpeed() {
-        return oseanCurrentSpeed;
+        return this.oceanCurrentSpeed;
     }
 
-    private void setOseanCurrentSpeed(int oseanCurrentSpeed) {
-        this.oseanCurrentSpeed = oseanCurrentSpeed;
-    }
-
+    @Override
     public Boolean getAllowsMotorboats() {
-        return allowsMotorBoats;
+        return this.allowsMotorBoats;
     }
 
-    private void setAllowsMotorBoats(Boolean allowsMotorBoats) {
-        this.allowsMotorBoats = allowsMotorBoats;
-    }
-
-    protected Map<String, MotorBoat> getRegisteredBoats() {
-        return this.registeredBoats;
-    }
-
-    public void AddParticipant(MotorBoat boat) throws DuplicateModelException {
-        if (this.getRegisteredBoats().containsKey(boat.getModel())) {
+    @Override
+    public void addParticipant(Boat boat) throws DuplicateModelException {
+        if (this.registeredBoats.containsKey(boat.getModel())) {
             throw new DuplicateModelException(Constants.DUPLICATE_MODEL_MESSAGE);
         }
         this.registeredBoats.put(boat.getModel(), boat);
     }
 
-    public List<MotorBoat> GetParticipants() {
-        return new ArrayList<>(this.registeredBoats.values());
+    @Override
+    public Collection<Boat> getParticipants() {
+        return this.registeredBoats.values();
     }
 }

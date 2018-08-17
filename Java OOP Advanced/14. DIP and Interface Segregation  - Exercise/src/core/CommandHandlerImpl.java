@@ -1,41 +1,33 @@
 package core;
 
+import contracts.CommandHandler;
 import utility.Constants;
 import contracts.BoatSimulatorController;
-import controllers.BoatSimulatorControllerImpl;
-import enumeration.EngineType;
 import exeptions.*;
 
 import java.util.List;
 
-public class CommandHandlerImpl implements contracts.CommandHandler {
-    public BoatSimulatorController controller;
+public class CommandHandlerImpl implements CommandHandler {
+
+    private BoatSimulatorController controller;
 
     public CommandHandlerImpl(BoatSimulatorController controller) {
-        this.setContrller(controller);
-    }
-
-    public BoatSimulatorController getController() {
-        return this.controller;
-    }
-
-    private void setContrller(BoatSimulatorController controller) {
         this.controller = controller;
     }
 
-    public String ExecuteCommand(String name, List<String> parameters) throws DuplicateModelException, NonExistantModelException,
+    @Override
+    public String executeCommand(String name, List<String> parameters) throws DuplicateModelException, NonExistentModelException,
             RaceAlreadyExistsException, NoSetRaceException, InsufficientContestantsException {
         switch (name) {
             case "CreateBoatEngine":
-                EngineType engineType;
-                if (parameters.get(3).equals("JET")) {
-                    return this.getController().CreateBoatEngine(
+                if (parameters.get(3).equals("Jet")) {
+                    return this.controller.createBoatEngine(
                             parameters.get(0),
                             Integer.parseInt(parameters.get(1)),
                             Integer.parseInt(parameters.get(2)),
                             "JET");
-                } else if (parameters.get(3).equals("STERNDRIVE")) {
-                    return this.getController().CreateBoatEngine(
+                } else if (parameters.get(3).equals("Sterndrive")) {
+                    return this.controller.createBoatEngine(
                             parameters.get(0),
                             Integer.parseInt(parameters.get(1)),
                             Integer.parseInt(parameters.get(2)),
@@ -45,39 +37,39 @@ public class CommandHandlerImpl implements contracts.CommandHandler {
                 throw new IllegalArgumentException(Constants.INCORRECT_ENGINE_TYPE_MESSAGE);
 
             case "CreateRowBoat":
-                return this.getController().CreateRowBoat(
+                return this.controller.createRowBoat(
                         parameters.get(0),
                         Integer.parseInt(parameters.get(1)),
                         Integer.parseInt(parameters.get(2)));
             case "CreateSailBoat":
-                return this.getController().CreateSailBoat(
+                return this.controller.createSailBoat(
                         parameters.get(0),
                         Integer.parseInt(parameters.get(1)),
                         Integer.parseInt(parameters.get(2)));
             case "CreatePowerBoat":
-                return this.getController().CreatePowerBoat(
+                return this.controller.createPowerBoat(
                         parameters.get(0),
                         Integer.parseInt(parameters.get(1)),
                         parameters.get(2),
                         parameters.get(3));
             case "CreateYacht":
-                return this.getController().CreateYacht(
+                return this.controller.createYacht(
                         parameters.get(0),
                         Integer.parseInt(parameters.get(1)),
                         parameters.get(2),
                         Integer.parseInt(parameters.get(3)));
             case "OpenRace":
-                return this.getController().OpenRace(
+                return this.controller.openRace(
                         Integer.parseInt(parameters.get(0)),
                         Integer.parseInt(parameters.get(1)),
                         Integer.parseInt(parameters.get(2)),
                         Boolean.parseBoolean(parameters.get(3)));
             case "SignUpBoat":
-                return this.getController().SignUpBoat(parameters.get(0));
+                return this.controller.signUpBoat(parameters.get(0));
             case "StartRace":
-                return this.getController().StartRace();
+                return this.controller.startRace();
             case "GetStatistic":
-                return this.getController().GetStatistic();
+                return this.controller.getStatistic();
             default:
                 throw new IllegalArgumentException();
         }
