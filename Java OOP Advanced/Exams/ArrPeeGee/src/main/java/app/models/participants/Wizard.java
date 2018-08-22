@@ -1,17 +1,27 @@
 package app.models.participants;
 
-import static app.models.Config.*;
+import app.constants.Config;
+import app.contracts.Targetable;
 
 public class Wizard extends AbstractHero {
 
+    public Wizard() {
+        super(Config.WIZARD_BASE_STRENGTH, Config.WIZARD_BASE_DEXTERITY, Config.WIZARD_BASE_INTELLIGENCE);
+    }
+
     public Wizard(String name) {
-        super(name, WIZARD_BASE_HEALTH, WIZARD_BASE_DAMAGE, HERO_START_GOLD,
-                WIZARD_BASE_STRENGTH, WIZARD_BASE_DEXTERITY, WIZARD_BASE_INTELLIGENCE);
+        this();
+        this.setName(name);
     }
 
     @Override
     public double getDamage() {
-        return this.getIntelligence() * 5 + this.getDexterity();
+        return (this.getIntelligence() * Config.WIZARD_DAMAGE_MULTIPLIER) + this.getDexterity();
     }
 
+    @Override
+    public String attack(Targetable target) {
+        super.activateSpeciality();
+        return super.attack(target);
+    }
 }

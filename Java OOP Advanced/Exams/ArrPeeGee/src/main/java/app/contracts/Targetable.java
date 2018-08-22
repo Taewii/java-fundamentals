@@ -14,9 +14,9 @@ public interface Targetable {
 
     double getHealth();
 
-    double getGold();
-
     void setHealth(double health);
+
+    double getGold();
 
     void giveReward(Targetable targetable);
 

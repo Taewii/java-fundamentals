@@ -1,21 +1,22 @@
 package app.io;
 
+
 import app.contracts.Reader;
+import app.factory.BaseStructureFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class ConsoleReader implements Reader {
 
-    private BufferedReader reader;
+    private BufferedReader bf;
 
-    public ConsoleReader(){
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
+    public ConsoleReader() {
+        this.bf = BaseStructureFactory.createBufferedReader();
     }
 
     @Override
     public String readLine() throws IOException {
-        return reader.readLine();
+        return bf.readLine();
     }
 }

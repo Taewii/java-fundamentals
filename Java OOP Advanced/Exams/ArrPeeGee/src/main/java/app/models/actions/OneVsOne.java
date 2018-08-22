@@ -1,22 +1,21 @@
 package app.models.actions;
 
+import app.constants.Texts;
 import app.contracts.Action;
 import app.contracts.Targetable;
+import app.factory.BaseStructureFactory;
 
 import java.util.List;
-
-import static app.models.Constants.EXACTLY_TWO_PARTICIPANTS_NEEDED;
-import static app.models.Constants.WINNER_STRING;
 
 public class OneVsOne implements Action {
 
     public String executeAction(List<Targetable> participants) {
-        StringBuilder sb = new StringBuilder();
 
         if (participants.size() != 2) {
-            sb.append(EXACTLY_TWO_PARTICIPANTS_NEEDED);
-            return sb.toString();
+            return Texts.INVALID_PARTICIPANTS_FOR_ONE_VS_ONE;
         }
+
+        StringBuilder sb = BaseStructureFactory.createStringBuilder();
 
         Targetable firstHero = participants.get(0);
         Targetable secondHero = participants.get(1);
@@ -30,11 +29,9 @@ public class OneVsOne implements Action {
             }
         }
 
-        if (firstHero.isAlive()) {
-            sb.append(String.format(WINNER_STRING, firstHero.getName(), System.lineSeparator(), firstHero.toString()));
-        } else {
-            sb.append(String.format(WINNER_STRING, firstHero.getName(), System.lineSeparator(), firstHero.toString()));
-        }
+        Targetable victor = firstHero.isAlive() ? firstHero : secondHero;
+        victor.levelUp();
+        sb.append(String.format(Texts.HERO_IS_VICTORIOUS, victor.getName(), victor));
 
         return sb.toString();
     }

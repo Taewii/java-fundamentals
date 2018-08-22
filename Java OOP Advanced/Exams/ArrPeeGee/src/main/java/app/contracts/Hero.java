@@ -13,5 +13,4 @@ public interface Hero extends Targetable {
     int getIntelligence();
 
     void setIntelligence(int intelligence);
-
 }

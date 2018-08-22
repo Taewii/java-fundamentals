@@ -1,16 +1,26 @@
 package app.models.participants;
 
-import static app.models.Config.*;
+import app.constants.Config;
 
 public class Warrior extends AbstractHero {
 
+    public Warrior() {
+        super(Config.WARRIOR_BASE_STRENGTH, Config.WARRIOR_BASE_DEXTERITY, Config.WARRIOR_BASE_INTELLIGENCE);
+    }
+
     public Warrior(String name) {
-        super(name, WARRIOR_BASE_HEALTH, WARRIOR_BASE_DAMAGE, HERO_START_GOLD,
-                WARRIOR_BASE_STRENGTH, WARRIOR_BASE_DEXTERITY, WARRIOR_BASE_INTELLIGENCE);
+        this();
+        this.setName(name);
     }
 
     @Override
     public double getDamage() {
-        return this.getStrength() * 2 + this.getDexterity();
+        return (this.getStrength() * Config.WARRIOR_DAMAGE_MULTIPLIER) + this.getDexterity();
+    }
+
+    @Override
+    public void takeDamage(double damage) {
+        super.takeDamage(damage);
+        super.activateSpeciality();
     }
 }

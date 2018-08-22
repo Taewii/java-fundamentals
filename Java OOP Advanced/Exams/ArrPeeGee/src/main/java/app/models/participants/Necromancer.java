@@ -1,16 +1,30 @@
 package app.models.participants;
 
-import static app.models.Config.*;
+import app.constants.Config;
+import app.contracts.Targetable;
 
 public class Necromancer extends AbstractHero {
 
+    public Necromancer() {
+        super(Config.NECROMANCER_BASE_STRENGTH, Config.NECROMANCER_BASE_DEXTERITY, Config.NECROMANCER_BASE_INTELLIGENCE);
+    }
+
     public Necromancer(String name) {
-        super(name, NECROMANCER_BASE_HEALTH, NECROMANCER_BASE_DAMAGE, HERO_START_GOLD, NECROMANCER_BASE_STRENGTH,
-                NECROMANCER_BASE_DEXTERITY, NECROMANCER_BASE_INTELLIGENCE);
+        this();
+        this.setName(name);
     }
 
     @Override
     public double getDamage() {
-        return (this.getDexterity() + this.getIntelligence() + this.getStrength() * 2);
+        return this.getIntelligence() * Config.NECROMANCER_DAMAGE_MULTIPLIER +
+                this.getDexterity() * Config.NECROMANCER_DAMAGE_MULTIPLIER +
+                this.getStrength() * Config.NECROMANCER_DAMAGE_MULTIPLIER;
+    }
+
+    @Override
+    public String attack(Targetable target) {
+        String result = super.attack(target);
+        super.activateSpeciality();
+        return result;
     }
 }
