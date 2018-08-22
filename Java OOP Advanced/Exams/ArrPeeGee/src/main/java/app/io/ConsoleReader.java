@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ConsoleReader implements Reader {
+
     private BufferedReader reader;
 
     public ConsoleReader(){

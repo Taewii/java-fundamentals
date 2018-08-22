@@ -1,26 +1,26 @@
 package app.core;
 
-import app.contracts.Action;
-import app.contracts.Battlefield;
-import app.contracts.Targetable;
-import app.contracts.TargetableFactory;
-import app.io.ConsoleWriter;
-import app.models.actions.OneVsOne;
-import app.models.participants.Warrior;
+import app.contracts.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static app.models.Constants.*;
+
 public class BattlefieldImplementation implements Battlefield {
 
     private Map<String, Targetable> participants;
     private List<Action> executedActions;
-    ConsoleWriter writer;
-    TargetableFactory targetableFactory;
+    private Writer writer;
+    private TargetableFactory targetableFactory;
+    private ActionFactory actionFactory;
 
-    public BattlefieldImplementation(ConsoleWriter writer) {
+    public BattlefieldImplementation(Writer writer, TargetableFactory targetableFactory, ActionFactory actionFactory) {
+        this.targetableFactory = targetableFactory;
+        this.actionFactory = actionFactory;
         this.executedActions = new ArrayList<>();
         this.participants = new TreeMap<>();
         this.writer = writer;
@@ -29,48 +29,44 @@ public class BattlefieldImplementation implements Battlefield {
     @Override
     public void createAction(String actionName, String... participantNames) {
         try {
-            Action action = new OneVsOne();
+            Action action = this.actionFactory.create(actionName);
 
             List<Targetable> actionParticipants = new ArrayList<>();
-            for (String name : participantNames){
-                if (this.participants.containsKey(name)){
+            for (String name : participantNames) {
+                if (this.participants.containsKey(name)) {
                     actionParticipants.add(this.participants.get(name));
                 } else {
-                    System.out.println(String.format("%s is not on the battlefield. %s failed.", name, actionName));
+                    this.writer.writeLine(String.format(PARTICIPANT_IS_NOT_ON_THE_BATTLEFIELD, name, actionName));
                     return;
                 }
             }
 
-            System.out.println(action.executeAction(actionParticipants));
+            this.writer.writeLine(action.executeAction(actionParticipants));
             checkForDeadParticipants();
             this.executedActions.add(action);
         } catch (Exception e) {
-            System.out.println("Action does not exist.");
+            this.writer.writeLine(ACTION_DOES_NOT_EXIST);
         }
     }
 
     @Override
     public void createParticipant(String name, String className) {
 
-        if (this.participants.containsKey(name)){
-            System.out.println("Participant with that name already exists.");
+        if (this.participants.containsKey(name)) {
+            this.writer.writeLine(PARTICIPANT_NAME_IS_TAKEN);
             return;
         }
 
-        Targetable targetable;
-
-        switch (className) {
-            case "Warrior":
-                targetable = new Warrior();
-                targetable.setName(name);
-                this.participants.put(targetable.getName(), targetable);
-                System.out.println(
-                        String.format("%s %s entered the battlefield.",
-                                targetable.getClass().getSimpleName(),
-                                targetable.getName()));
-                break;
-            default:
-                System.out.println("Participant class does not exist.");
+        try {
+            Targetable targetable = this.targetableFactory.create(name, className);
+            this.participants.put(targetable.getName(), targetable);
+            this.writer.writeLine(
+                    String.format(TARGETABLE_HAS_ENTERED_THE_BATTLEGROUND,
+                            targetable.getClass().getSimpleName(),
+                            targetable.getName()));
+        } catch (InstantiationException | ClassNotFoundException | IllegalAccessException
+                | NoSuchMethodException | InvocationTargetException e) {
+            this.writer.writeLine(PARTICIPANT_CLASS_DOES_NOT_EXIST);
         }
     }
 
@@ -80,38 +76,38 @@ public class BattlefieldImplementation implements Battlefield {
     }
 
     @Override
-    public void reportParticipants(){
+    public void reportParticipants() {
         if (this.participants.size() < 1) {
-            System.out.println("There are no participants on the battlefield.");
+            this.writer.writeLine(BATTLEFIELD_IS_EMPTY);
             return;
         }
 
-        for (String name : this.participants.keySet()) {
-            System.out.println(this.participants.get(name).toString());
-            System.out.println("* * * * * * * * * * * * * * * * * * * *");
+        for (Targetable participant : this.participants.values()) {
+            this.writer.writeLine(participant.toString()); //todo check if i didn't fuck this up
+            this.writer.writeLine(PARTICIPANT_SEPARATOR);
         }
     }
 
     @Override
-    public void reportActions(){
+    public void reportActions() {
         if (this.executedActions.size() < 1) {
-            System.out.println("There are no actions on the battlefield.");
+            this.writer.writeLine(THERE_ARE_NO_ACTIONS_ON_THE_BATTLEFIELD);
             return;
         }
 
         for (Action executedAction : executedActions) {
-            System.out.println(executedAction.getClass().getSimpleName());
+            this.writer.writeLine(executedAction.getClass().getSimpleName());
         }
     }
 
-    private void checkForDeadParticipants(){
+    private void checkForDeadParticipants() {
         Map<String, Targetable> aliveParticipants = new TreeMap<>();
 
-        for (String name : this.participants.keySet()) {
-            if (!this.participants.get(name).isAlive()){
-                System.out.println(String.format("%s has been removed from the battlefield.", name));
-            }else {
-                aliveParticipants.put(name, this.participants.get(name));
+        for (Targetable participant : this.participants.values()) {
+            if (!participant.isAlive()) {
+                this.writer.writeLine(String.format(TARGET_HAS_BEEN_REMOVED_FROM_THE_BATTLEFIELD, participant.getName()));
+            } else {
+                aliveParticipants.put(participant.getName(), participant);
             }
         }
 
