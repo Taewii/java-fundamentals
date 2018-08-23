@@ -8,7 +8,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-
 public class EngineImpl implements Engine {
 
     private InputReader reader;
@@ -19,7 +18,8 @@ public class EngineImpl implements Engine {
     private RecpieFactory recpieFactory;
     private String[] data;
 
-    public EngineImpl(InputReader reader, OutputWriter writer, Repository heroes, HeroFactory heroFactory, CommonItemFactory itemFactory, RecpieFactory recpieFactory) {
+    public EngineImpl(InputReader reader, OutputWriter writer, Repository heroes,
+                      HeroFactory heroFactory, CommonItemFactory itemFactory, RecpieFactory recpieFactory) {
         this.reader = reader;
         this.writer = writer;
         this.heroes = heroes;
@@ -35,9 +35,9 @@ public class EngineImpl implements Engine {
             String data[] = input.split("\\s+");
             String commandName = data[0];
             String result = parseCommand(commandName, data);
-            this.writer.writeLine(result);
+            this.writer.writeLine(result.trim());
 
-            if (Constants.TERMINATING_COMMAND.equals(result)) {
+            if (Constants.TERMINATING_COMMAND.equals(input)) {
                 break;
             }
         }

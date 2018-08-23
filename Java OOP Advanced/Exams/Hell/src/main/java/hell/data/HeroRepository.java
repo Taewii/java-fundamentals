@@ -1,9 +1,12 @@
 package hell.data;
 
 import hell.interfaces.Hero;
+import hell.interfaces.Item;
 import hell.interfaces.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HeroRepository implements Repository {
@@ -26,7 +29,39 @@ public class HeroRepository implements Repository {
 
     @Override
     public String getStatistics() {
-        //TODO
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        final int[] count = {1};
+
+        this.heroes.values().stream().sorted((a, b) -> {
+            long strAgiIntStats1 = a.getAgility() + a.getStrength() + a.getIntelligence();
+            long strAgiIntStats2 = b.getAgility() + b.getStrength() + b.getIntelligence();
+
+            long hitDmgStats1 = a.getHitPoints() + a.getDamage();
+            long hitDmgStats2 = b.getHitPoints() + b.getDamage();
+
+            long result = Long.compare(strAgiIntStats2, strAgiIntStats1);
+
+            if (result == 0) {
+                result = Long.compare(hitDmgStats2, hitDmgStats1);
+            }
+
+            return (int) result;
+        }).forEach(hero -> {
+            List<String> itemNames = new ArrayList<>();
+            for (Item item : hero.getItems()) {
+                itemNames.add(item.getName());
+            }
+            sb.append(count[0]++).append(". ");
+            sb.append(String.format("%s: %s%n", hero.getClass().getSimpleName(), hero.getName()));
+            sb.append(String.format("###HitPoints: %d%n", hero.getHitPoints()));
+            sb.append(String.format("###Damage: %d%n", hero.getDamage()));
+            sb.append(String.format("###Strength: %d%n", hero.getStrength()));
+            sb.append(String.format("###Agility: %d%n", hero.getAgility()));
+            sb.append(String.format("###Intelligence: %d%n", hero.getIntelligence()));
+            sb.append(String.format("###Items: %s%n", itemNames.size() == 0 ? "None" : String.join(", ", itemNames)));
+        });
+
+        return sb.toString().trim();
     }
 }

@@ -21,7 +21,7 @@ public class RecipeCommand implements Executable {
 
     @Override
     public String execute() {
-        List<String> items = Arrays.stream(this.data).skip(7).collect(Collectors.toList());
+        List<String> items = Arrays.stream(this.data).skip(8).collect(Collectors.toList());
         Hero hero = this.heroes.getHero(this.data[2]);
         Recipe recipe = (Recipe) this.recpieFactory.create(this.data[1],
                 Integer.parseInt(this.data[3]),

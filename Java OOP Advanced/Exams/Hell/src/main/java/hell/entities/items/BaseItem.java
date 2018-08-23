@@ -49,4 +49,18 @@ public abstract class BaseItem implements Item {
     public int getDamageBonus() {
         return this.damageBonus;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("###Item: %s%n", this.name));
+        sb.append(String.format("###+%d Strength%n", this.getStrengthBonus()));
+        sb.append(String.format("###+%d Agility%n", this.getAgilityBonus()));
+        sb.append(String.format("###+%d Intelligence%n", this.getIntelligenceBonus()));
+        sb.append(String.format("###+%d HitPoints%n", this.getHitPointsBonus()));
+        sb.append(String.format("###+%d Damage%n", this.getDamageBonus()));
+
+        return sb.toString().trim();
+    }
 }
