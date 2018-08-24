@@ -2,11 +2,11 @@ package hell.factories;
 
 import hell.entities.items.RecipeItem;
 import hell.interfaces.Recipe;
-import hell.interfaces.RecpieFactory;
+import hell.interfaces.RecipeFactory;
 
 import java.util.List;
 
-public class RecipeFactoryImpl implements RecpieFactory {
+public class RecipeFactoryImpl implements RecipeFactory {
 
     @Override
     public Recipe create(String name, int strengthBonus, int agilityBonus, int intelligenceBonus,

@@ -1,7 +1,7 @@
 package hell.entities.miscellaneous;
 
 import hell.entities.items.CommonItem;
-import hell.interfaces.CommonItemFactory;
+import hell.factories.CommonItemFactoryImpl;
 import hell.interfaces.Inventory;
 import hell.interfaces.Item;
 import hell.interfaces.Recipe;
@@ -14,9 +14,6 @@ public class HeroInventory implements Inventory {
     private Map<String, Item> commonItems;
 
     private Map<String, Recipe> recipeItems;
-
-    @Inject
-    private CommonItemFactory itemFactory;
 
     public HeroInventory() {
         this.commonItems = new LinkedHashMap<>();
@@ -84,10 +81,6 @@ public class HeroInventory implements Inventory {
 
         Item newItem = new CommonItem(recipe.getName(), recipe.getStrengthBonus(), recipe.getAgilityBonus(),
                 recipe.getIntelligenceBonus(), recipe.getHitPointsBonus(), recipe.getDamageBonus());
-
-        //todo check why this gives nullpointer exception
-//        Item newItemm = this.itemFactory.create(recipe.getName(), recipe.getStrengthBonus(), recipe.getAgilityBonus(),
-//                recipe.getIntelligenceBonus(), recipe.getHitPointsBonus(), recipe.getDamageBonus());
 
         this.commonItems.put(newItem.getName(), newItem);
     }

@@ -17,13 +17,13 @@ public class RecipeCommand implements Executable {
     private Repository heroes;
 
     @Inject
-    private RecpieFactory recpieFactory;
+    private RecipeFactory recipeFactory;
 
     @Override
     public String execute() {
         List<String> items = Arrays.stream(this.data).skip(8).collect(Collectors.toList());
         Hero hero = this.heroes.getHero(this.data[2]);
-        Recipe recipe = (Recipe) this.recpieFactory.create(this.data[1],
+        Recipe recipe = (Recipe) this.recipeFactory.create(this.data[1],
                 Integer.parseInt(this.data[3]),
                 Integer.parseInt(this.data[4]),
                 Integer.parseInt(this.data[5]),

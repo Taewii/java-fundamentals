@@ -15,17 +15,17 @@ public class EngineImpl implements Engine {
     private Repository heroes;
     private HeroFactory heroFactory;
     private CommonItemFactory itemFactory;
-    private RecpieFactory recpieFactory;
+    private RecipeFactory recipeFactory;
     private String[] data;
 
     public EngineImpl(InputReader reader, OutputWriter writer, Repository heroes,
-                      HeroFactory heroFactory, CommonItemFactory itemFactory, RecpieFactory recpieFactory) {
+                      HeroFactory heroFactory, CommonItemFactory itemFactory, RecipeFactory recipeFactory) {
         this.reader = reader;
         this.writer = writer;
         this.heroes = heroes;
         this.heroFactory = heroFactory;
         this.itemFactory = itemFactory;
-        this.recpieFactory = recpieFactory;
+        this.recipeFactory = recipeFactory;
     }
 
     @Override

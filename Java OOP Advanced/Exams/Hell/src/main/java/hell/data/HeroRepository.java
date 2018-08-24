@@ -37,13 +37,13 @@ public class HeroRepository implements Repository {
             long hitDmgStats1 = a.getHitPoints() + a.getDamage();
             long hitDmgStats2 = b.getHitPoints() + b.getDamage();
 
-            long result = Long.compare(strAgiIntStats2, strAgiIntStats1);
+            int result = Long.compare(strAgiIntStats2, strAgiIntStats1);
 
             if (result == 0) {
                 result = Long.compare(hitDmgStats2, hitDmgStats1);
             }
 
-            return (int) result;
+            return result;
         }).forEach(hero -> {
             List<String> itemNames = new ArrayList<>();
             for (Item item : hero.getItems()) {

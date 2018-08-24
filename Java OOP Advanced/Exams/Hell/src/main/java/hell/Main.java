@@ -19,9 +19,9 @@ public class Main {
         Repository heroes = new HeroRepository();
         HeroFactory heroFactory = new HeroFactoryImpl();
         CommonItemFactory itemFactory = new CommonItemFactoryImpl();
-        RecpieFactory recpieFactory = new RecipeFactoryImpl();
+        RecipeFactory recipeFactory = new RecipeFactoryImpl();
 
-        Engine engine = new EngineImpl(reader, writer, heroes, heroFactory, itemFactory, recpieFactory);
+        Engine engine = new EngineImpl(reader, writer, heroes, heroFactory, itemFactory, recipeFactory);
 
         engine.run();
     }

@@ -1,6 +1,5 @@
 package hell.entities.heroes;
 
-import hell.entities.miscellaneous.HeroInventory;
 import hell.entities.miscellaneous.ItemCollection;
 import hell.interfaces.Hero;
 import hell.interfaces.Inventory;
@@ -22,14 +21,14 @@ public abstract class BaseHero implements Hero {
     private Inventory inventory;
 
     protected BaseHero(String name, int strength, int agility, int intelligence,
-                       int hitPoints, int damage) {
+                       int hitPoints, int damage, Inventory inventory) {
         this.name = name;
         this.strength = strength;
         this.agility = agility;
         this.intelligence = intelligence;
         this.hitPoints = hitPoints;
         this.damage = damage;
-        this.inventory = new HeroInventory();
+        this.inventory = inventory;
     }
 
     @Override
