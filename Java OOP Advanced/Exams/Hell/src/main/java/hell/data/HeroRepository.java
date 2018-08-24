@@ -4,17 +4,14 @@ import hell.interfaces.Hero;
 import hell.interfaces.Item;
 import hell.interfaces.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HeroRepository implements Repository {
 
     private Map<String, Hero> heroes;
 
     public HeroRepository() {
-        this.heroes = new HashMap<>();
+        this.heroes = new LinkedHashMap<>();
     }
 
     @Override

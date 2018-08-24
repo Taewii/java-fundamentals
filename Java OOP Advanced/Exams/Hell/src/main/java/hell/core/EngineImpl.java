@@ -35,7 +35,7 @@ public class EngineImpl implements Engine {
             String data[] = input.split("\\s+");
             String commandName = data[0];
             String result = parseCommand(commandName, data);
-            this.writer.writeLine(result.trim());
+            this.writer.writeLine(result);
 
             if (Constants.TERMINATING_COMMAND.equals(input)) {
                 break;
