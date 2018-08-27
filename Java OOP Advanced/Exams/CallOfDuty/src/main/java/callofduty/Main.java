@@ -19,9 +19,9 @@ public class Main {
         OutputWriter writer = new ConsoleWriter();
         InputReader reader = new ConsoleReader(new BufferedReader(new InputStreamReader(System.in)));
         MissionControl missionControl = new MissionControlImpl();
-        MissionManager missionManager = new MissionManagerImpl();
+        MissionManager missionManager = new MissionManagerImpl(missionControl);
 
-        Runnable engine = new Engine(writer, reader, missionControl, missionManager);
+        Runnable engine = new Engine(writer, reader, missionManager);
 
         engine.run();
     }

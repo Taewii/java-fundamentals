@@ -15,4 +15,18 @@ public class MasterAgent extends BaseAgent implements BountyAgent {
     public Double getBounty() {
         return this.bounty;
     }
+
+    protected void setBounty(Double bounty) {
+        this.bounty = bounty;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(super.toString());
+        sb.append(String.format("%nBounty Earned: $%.2f", this.getBounty()));
+
+        return sb.toString();
+    }
 }

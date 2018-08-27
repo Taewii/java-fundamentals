@@ -43,17 +43,15 @@ public class MissionControlImpl implements MissionControl {
     private Double checkAndReformMissionRating(Double missionRating) {
         return missionRating < MISSION_RATING_MINIMUM_VALUE
                 ? MISSION_RATING_MINIMUM_VALUE
-                : (missionRating < MISSION_RATING_MAXIMUM_VALUE
-                ? MISSION_RATING_MAXIMUM_VALUE
-                : missionRating);
+                : (missionRating > MISSION_RATING_MAXIMUM_VALUE
+                ? MISSION_RATING_MAXIMUM_VALUE : missionRating);
     }
 
     private Double checkAndreformMissionBounty(Double missionBounty) {
-        return missionBounty > MISSION_BOUNTY_MINIMUM_VALUE
+        return missionBounty < MISSION_BOUNTY_MINIMUM_VALUE
                 ? MISSION_BOUNTY_MINIMUM_VALUE
-                : (missionBounty < MISSION_BOUNTY_MAXIMUM_VALUE
-                ? MISSION_BOUNTY_MAXIMUM_VALUE
-                : missionBounty);
+                : (missionBounty > MISSION_BOUNTY_MAXIMUM_VALUE
+                ? MISSION_BOUNTY_MAXIMUM_VALUE : missionBounty);
     }
 
     private void updateMissionType() {
@@ -64,7 +62,7 @@ public class MissionControlImpl implements MissionControl {
     }
 
     private Class currentMission() {
-        if (this.missionIterator.hasNext()) {
+        if (!this.missionIterator.hasNext()) {
             this.updateMissionType();
         }
 
@@ -80,8 +78,9 @@ public class MissionControlImpl implements MissionControl {
                     this.currentMission()
                             .getConstructor(String.class, Double.class, Double.class)
                             .newInstance(missionId, missionRating, missionBounty);
-        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException ignored) {
-            ;
+        } catch (IllegalAccessException | InstantiationException
+                | NoSuchMethodException | InvocationTargetException ex) {
+            ex.getStackTrace();
         }
 
         return missionObject;
@@ -93,8 +92,7 @@ public class MissionControlImpl implements MissionControl {
         missionRating = this.checkAndReformMissionRating(missionRating);
         missionBounty = this.checkAndreformMissionBounty(missionBounty);
 
-        Mission generatedMission =
-                this.instantiateMissionObject(missionId, missionBounty, missionRating);
+        Mission generatedMission = this.instantiateMissionObject(missionId, missionRating, missionBounty);
 
         return generatedMission;
     }
