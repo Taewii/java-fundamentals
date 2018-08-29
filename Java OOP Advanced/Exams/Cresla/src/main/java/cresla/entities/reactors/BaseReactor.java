@@ -20,7 +20,7 @@ public abstract class BaseReactor implements Reactor {
 
     @Override
     public long getTotalEnergyOutput() {
-        long energyOutput = this.moduleContainer.getTotalEnergyOutput();
+        long energyOutput = this.getEnergy();
         long heatAbsorbing = this.getTotalHeatAbsorbing();
 
         return energyOutput > heatAbsorbing ? 0L : energyOutput;
@@ -34,17 +34,16 @@ public abstract class BaseReactor implements Reactor {
     @Override
     @SuppressWarnings("unchecked")
     public int getModuleCount() {
-        List<Module> modules = null;
         try {
             Field modulesByInput = this.moduleContainer.getClass().getDeclaredField("modulesByInput");
             modulesByInput.setAccessible(true);
-            modules = (List<Module>) modulesByInput.get(this.moduleContainer);
+            List<Module> modules = (List<Module>) modulesByInput.get(this.moduleContainer);
             return modules.size();
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
-        return modules.size();
+        return 0;
     }
 
     @Override
@@ -55,6 +54,10 @@ public abstract class BaseReactor implements Reactor {
     @Override
     public void addAbsorbingModule(AbsorbingModule absorbingModule) {
         this.moduleContainer.addAbsorbingModule(absorbingModule);
+    }
+
+    protected long getEnergy() {
+        return this.moduleContainer.getTotalEnergyOutput();
     }
 
     @Override

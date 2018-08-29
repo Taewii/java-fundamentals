@@ -10,13 +10,13 @@ import java.util.*;
 public class ModuleContainer implements Container {
 
     private int moduleCapacity;
-    private List<Module> modulesByInput;
+    private LinkedList<Module> modulesByInput;
     private Map<Integer, EnergyModule> energyModules;
     private Map<Integer, AbsorbingModule> absorbingModules;
 
     public ModuleContainer(int moduleCapacity) {
         this.moduleCapacity = moduleCapacity;
-        this.modulesByInput = new ArrayList<>();
+        this.modulesByInput = new LinkedList<>();
         this.energyModules = new LinkedHashMap<>();
         this.absorbingModules = new LinkedHashMap<>();
     }
@@ -31,7 +31,7 @@ public class ModuleContainer implements Container {
         }
 
         this.energyModules.put(energyModule.getId(), energyModule);
-        this.modulesByInput.add(energyModule);
+        this.modulesByInput.addLast(energyModule);
     }
 
     public void addAbsorbingModule(AbsorbingModule absorbingModule) {
@@ -44,7 +44,7 @@ public class ModuleContainer implements Container {
         }
 
         this.absorbingModules.put(absorbingModule.getId(), absorbingModule);
-        this.modulesByInput.add(absorbingModule);
+        this.modulesByInput.addLast(absorbingModule);
     }
 
     @Override
@@ -62,13 +62,11 @@ public class ModuleContainer implements Container {
     }
 
     private void removeOldestModule() {
-        int removeId = this.modulesByInput.remove(0).getId();
+        int removeId = this.modulesByInput.removeFirst().getId();
 
         if (this.energyModules.containsKey(removeId)) {
             this.energyModules.remove(removeId);
-        }
-
-        if (this.absorbingModules.containsKey(removeId)) {
+        } else if (this.absorbingModules.containsKey(removeId)) {
             this.absorbingModules.remove(removeId);
         }
     }
