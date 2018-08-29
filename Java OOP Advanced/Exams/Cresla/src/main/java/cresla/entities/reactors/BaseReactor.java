@@ -6,7 +6,7 @@ import cresla.interfaces.EnergyModule;
 import cresla.interfaces.Reactor;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.LinkedList;
 
 public abstract class BaseReactor implements Reactor {
 
@@ -37,7 +37,7 @@ public abstract class BaseReactor implements Reactor {
         try {
             Field modulesByInput = this.moduleContainer.getClass().getDeclaredField("modulesByInput");
             modulesByInput.setAccessible(true);
-            List<Module> modules = (List<Module>) modulesByInput.get(this.moduleContainer);
+            LinkedList<Module> modules = (LinkedList<Module>) modulesByInput.get(this.moduleContainer);
             return modules.size();
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();

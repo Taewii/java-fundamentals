@@ -1,13 +1,10 @@
 package cresla.core;
 
-import cresla.Constants;
 import cresla.interfaces.Engine;
 import cresla.interfaces.InputReader;
 import cresla.interfaces.Manager;
 import cresla.interfaces.OutputWriter;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,32 +23,26 @@ public class EngineImpl implements Engine {
 
     @Override
     public void run() {
+        terminate:
         while (true) {
-            String input = this.reader.readLine();
-            String[] tokens = input.split("\\s+");
-            String command = tokens[0].toLowerCase();
+            String[] tokens = this.reader.readLine().split("\\s+");
+            String command = tokens[0];
             List<String> arguments = Arrays.stream(tokens).skip(1).collect(Collectors.toList());
 
-            this.writer.writeLine(executeCommand(command, arguments));
-
-            if ("exit".equals(command)) {
-                break;
+            switch (command) {
+                case "Reactor":
+                    this.writer.writeLine(this.manager.reactorCommand(arguments));
+                    break;
+                case "Module":
+                    this.writer.writeLine(this.manager.moduleCommand(arguments));
+                    break;
+                case "Report":
+                    this.writer.writeLine(this.manager.reportCommand(arguments));
+                    break;
+                case "Exit":
+                    this.writer.writeLine(this.manager.exitCommand(arguments));
+                    break terminate;
             }
         }
-    }
-
-    private String executeCommand(String command, List<String> arguments) {
-        String result = null;
-
-        try {
-            Method methods = Class.forName(Constants.CRESLA_MANAGER_PATH)
-                    .getDeclaredMethod(command + Constants.COMMAND_SUFFIX, List.class);
-            result = (String) methods.invoke(this.manager, arguments);
-        } catch (ClassNotFoundException | InvocationTargetException |
-                 IllegalAccessException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-        return result;
     }
 }
