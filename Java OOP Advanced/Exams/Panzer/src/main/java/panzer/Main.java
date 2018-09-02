@@ -1,9 +1,11 @@
 package panzer;
 
+import panzer.contracts.BattleOperator;
 import panzer.contracts.InputReader;
 import panzer.contracts.Manager;
 import panzer.contracts.OutputWriter;
 import panzer.core.Engine;
+import panzer.core.PanzerBattleOperator;
 import panzer.core.VehicleManager;
 import panzer.io.ConsoleReader;
 import panzer.io.ConsoleWriter;
@@ -16,7 +18,8 @@ public class Main {
 
         InputReader reader = new ConsoleReader(new BufferedReader(new InputStreamReader(System.in)));
         OutputWriter writer = new ConsoleWriter();
-        Manager manager = new VehicleManager();
+        BattleOperator battleOperator = new PanzerBattleOperator();
+        Manager manager = new VehicleManager(battleOperator);
         Runnable engine = new Engine(reader, writer, manager);
 
         engine.run();

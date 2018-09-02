@@ -17,4 +17,13 @@ public class ArsenalPart extends BasePart implements AttackModifyingPart {
     public int getAttackModifier() {
         return this.attackModifier;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(super.toString()).append(String.format("+%d Attack", this.getAttackModifier()));
+
+        return sb.toString();
+    }
 }

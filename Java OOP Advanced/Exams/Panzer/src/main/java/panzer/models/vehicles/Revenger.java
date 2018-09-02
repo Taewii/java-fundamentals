@@ -13,7 +13,7 @@ public class Revenger extends BaseVehicle {
                 model,
                 weight,
                 price.multiply(new BigDecimal(REVENGER_PRICE_MODIFIER)),
-                attack,
+                (int) (attack * REVENGER_ATTACK_MODIFIER),
                 (int) (defence * REVENGER_DEFENCE_MODIFIER),
                 (int) (hitPoints * REVENGER_HITPOINTS_MODIFIER),
                 vehicleAssembler);

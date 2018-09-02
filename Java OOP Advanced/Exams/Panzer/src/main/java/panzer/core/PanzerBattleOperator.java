@@ -32,7 +32,7 @@ public class PanzerBattleOperator implements BattleOperator {
             isSomeoneDead = isDead(attackerHitPoints) || isDead(targetHitPoints);
         }
 
-        String result = null;
+        String result;
 
         if (isDead(attackerHitPoints)) {
             result = target.getModel();

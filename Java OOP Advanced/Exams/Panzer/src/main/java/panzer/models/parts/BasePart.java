@@ -30,4 +30,15 @@ public abstract class BasePart implements Part {
     public String getModel() {
         return this.model;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("%s Part - %s%n",
+                this.getClass().getSimpleName().replace("Part", ""),
+                this.getModel()));
+
+        return sb.toString();
+    }
 }

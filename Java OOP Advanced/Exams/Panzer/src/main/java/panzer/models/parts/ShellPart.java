@@ -17,4 +17,13 @@ public class ShellPart extends BasePart implements DefenseModifyingPart {
     public int getDefenseModifier() {
         return this.defenceModifier;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(super.toString()).append(String.format("+%d Defence", this.getDefenseModifier()));
+
+        return sb.toString();
+    }
 }

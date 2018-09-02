@@ -17,4 +17,13 @@ public class EnduranePart extends BasePart implements HitPointsModifyingPart {
     public int getHitPointsModifier() {
         return this.hitPointsModifier;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(super.toString()).append(String.format("+%d HitPoints", this.getHitPointsModifier()));
+
+        return sb.toString();
+    }
 }
