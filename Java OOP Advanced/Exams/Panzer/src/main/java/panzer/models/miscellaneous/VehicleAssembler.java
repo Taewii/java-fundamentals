@@ -22,9 +22,7 @@ public class VehicleAssembler implements Assembler {
 
     @Override
     public double getTotalWeight() {
-        return this.arsenalParts.stream().mapToDouble(Part::getWeight).sum()
-                + this.shellParts.stream().mapToDouble(Part::getWeight).sum()
-                + this.enduranceParts.stream().mapToDouble(Part::getWeight).sum();
+        return this.allParts.stream().mapToDouble(Part::getWeight).sum();
     }
 
     @Override
@@ -34,18 +32,6 @@ public class VehicleAssembler implements Assembler {
         for (Part part : this.allParts) {
             result = result.add(part.getPrice());
         }
-
-//        for (AttackModifyingPart arsenalPart : this.arsenalParts) {
-//            result = result.add(arsenalPart.getPrice());
-//        }
-//
-//        for (DefenseModifyingPart shellPart : this.shellParts) {
-//            result = result.add(shellPart.getPrice());
-//        }
-//
-//        for (HitPointsModifyingPart endurancePart : this.enduranceParts) {
-//            result = result.add(endurancePart.getPrice());
-//        }
 
         return result;
     }
@@ -67,19 +53,19 @@ public class VehicleAssembler implements Assembler {
 
     @Override
     public void addArsenalPart(Part arsenalPart) {
-        this.arsenalParts.add((AttackModifyingPart)arsenalPart);
+        this.arsenalParts.add((AttackModifyingPart) arsenalPart);
         this.allParts.add(arsenalPart);
     }
 
     @Override
     public void addShellPart(Part shellPart) {
-        this.shellParts.add((DefenseModifyingPart)shellPart);
+        this.shellParts.add((DefenseModifyingPart) shellPart);
         this.allParts.add(shellPart);
     }
 
     @Override
     public void addEndurancePart(Part endurancePart) {
-        this.enduranceParts.add((HitPointsModifyingPart)endurancePart);
+        this.enduranceParts.add((HitPointsModifyingPart) endurancePart);
         this.allParts.add(endurancePart);
     }
 }
