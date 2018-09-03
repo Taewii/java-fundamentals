@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import static panzer.Constants.*;
 
 public class Revenger extends BaseVehicle {
+
     public Revenger(String model, double weight, BigDecimal price, int attack,
                     int defence, int hitPoints, Assembler vehicleAssembler) {
         super(

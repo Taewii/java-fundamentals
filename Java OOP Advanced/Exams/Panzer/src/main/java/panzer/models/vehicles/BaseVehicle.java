@@ -20,7 +20,7 @@ public abstract class BaseVehicle implements Vehicle {
     private Assembler vehicleAssembler;
 
     protected BaseVehicle(String model, double weight, BigDecimal price, int attack,
-                       int defence, int hitPoints, Assembler vehicleAssembler) {
+                          int defence, int hitPoints, Assembler vehicleAssembler) {
         this.model = model;
         this.weight = weight;
         this.price = price;
@@ -78,7 +78,7 @@ public abstract class BaseVehicle implements Vehicle {
         try {
             Field allParts = this.vehicleAssembler.getClass().getDeclaredField("allParts");
             allParts.setAccessible(true);
-           parts = (List<Part>) allParts.get(this.vehicleAssembler);
+            parts = (List<Part>) allParts.get(this.vehicleAssembler);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -105,7 +105,7 @@ public abstract class BaseVehicle implements Vehicle {
         sb.append(String.format("Total Weight: %.3f%n", this.getTotalWeight()));
         sb.append(String.format("Total Price: %.3f%n", this.getTotalPrice()));
         sb.append(String.format("Attack: %d%n", this.getTotalAttack()));
-        sb.append(String.format("Defence: %d%n", this.getTotalDefense()));
+        sb.append(String.format("Defense: %d%n", this.getTotalDefense()));
         sb.append(String.format("HitPoints: %d%n", this.getTotalHitPoints()));
         sb.append("Parts: ").append(partModels.isEmpty() ? "None" : String.join(", ", partModels));
 

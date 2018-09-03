@@ -20,7 +20,7 @@ public class PanzerBattleOperator implements BattleOperator {
         boolean isAttackerTurn = true;
         boolean isSomeoneDead = isDead(attackerHitPoints) || isDead(targetHitPoints);
 
-        while (isSomeoneDead) {
+        while (!isSomeoneDead) {
             if (isAttackerTurn) {
                 targetHitPoints -= (long) Math.max(0, Math.ceil(attackerAttack - (targetDefense + (targetWeight / 2))));
                 isAttackerTurn = false;

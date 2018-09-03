@@ -7,7 +7,7 @@ import panzer.contracts.Part;
 import panzer.contracts.Vehicle;
 import panzer.models.miscellaneous.VehicleAssembler;
 import panzer.models.parts.ArsenalPart;
-import panzer.models.parts.EnduranePart;
+import panzer.models.parts.EndurancePart;
 import panzer.models.parts.ShellPart;
 import panzer.models.vehicles.Revenger;
 import panzer.models.vehicles.Vanguard;
@@ -16,16 +16,19 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class VehicleManager implements Manager {
 
     private Map<String, Vehicle> vehicles;
+    private Map<String, Vehicle> defeatedVehicles;
     private Map<String, Part> parts;
     private BattleOperator battleOperator;
 
     public VehicleManager(BattleOperator battleOperator) {
         this.battleOperator = battleOperator;
         this.vehicles = new LinkedHashMap<>();
+        this.defeatedVehicles = new LinkedHashMap<>();
         this.parts = new LinkedHashMap<>();
     }
 
@@ -81,7 +84,7 @@ public class VehicleManager implements Manager {
                 vehicle.addShellPart(part);
                 break;
             case "Endurance":
-                part = new EnduranePart(arguments.get(2),
+                part = new EndurancePart(arguments.get(2),
                         Double.parseDouble(arguments.get(3)),
                         new BigDecimal(arguments.get(4)),
                         Integer.parseInt(arguments.get(5)));
@@ -117,16 +120,39 @@ public class VehicleManager implements Manager {
         String winner = this.battleOperator.battle(attacker, target);
 
         if (winner.equals(attacker.getModel())) {
+            this.defeatedVehicles.put(target.getModel(), target);
             this.vehicles.remove(target.getModel());
         } else {
+            this.defeatedVehicles.put(attacker.getModel(), attacker);
             this.vehicles.remove(attacker.getModel());
         }
 
         return String.format(Constants.BATTLE_MESSAGE, attacker.getModel(), target.getModel(), winner);
     }
 
+    private int getUsedPartsCount() {
+        int count = 0;
+        for (Vehicle vehicle : this.vehicles.values()) {
+            List<Part> parts = (List<Part>) vehicle.getParts();
+            count += parts.size();
+        }
+        return count;
+    }
+
     @Override
     public String terminate(List<String> arguments) {
-        return null;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Remaining Vehicles: ");
+        sb.append(this.vehicles.isEmpty() ? "None" : this.vehicles.values().stream()
+                .map(Vehicle::getModel).collect(Collectors.joining(", ")))
+                .append(System.lineSeparator());
+        sb.append("Defeated Vehicles: ");
+        sb.append(this.defeatedVehicles.isEmpty() ? "None" : this.defeatedVehicles.values().stream()
+                .map(Vehicle::getModel).collect(Collectors.joining(", ")))
+                .append(System.lineSeparator());
+        sb.append("Currently Used Parts: ").append(getUsedPartsCount());
+
+        return sb.toString();
     }
 }

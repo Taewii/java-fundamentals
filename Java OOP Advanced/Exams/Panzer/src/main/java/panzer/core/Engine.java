@@ -22,10 +22,8 @@ public class Engine implements Runnable {
 
     @Override
     public void run() {
-        String input = this.reader.readLine();
-
         while (true) {
-            String[] tokens = input.split("\\s+");
+            String[] tokens = this.reader.readLine().split("\\s+");
             String command = tokens[0];
             List<String> arguments = Arrays.stream(tokens).skip(1).collect(Collectors.toList());
             String result = "";
@@ -50,11 +48,9 @@ public class Engine implements Runnable {
 
             this.writer.println(result);
 
-            if ("Terminate".equals(result)) {
+            if ("Terminate".equals(command)) {
                 break;
             }
-
-            input = this.reader.readLine();
         }
     }
 }

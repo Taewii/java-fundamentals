@@ -4,11 +4,11 @@ import panzer.contracts.HitPointsModifyingPart;
 
 import java.math.BigDecimal;
 
-public class EnduranePart extends BasePart implements HitPointsModifyingPart {
+public class EndurancePart extends BasePart implements HitPointsModifyingPart {
 
     private int hitPointsModifier;
 
-    public EnduranePart(String model, double weight, BigDecimal price, int hitPointsModifier) {
+    public EndurancePart(String model, double weight, BigDecimal price, int hitPointsModifier) {
         super(model, weight, price);
         this.hitPointsModifier = hitPointsModifier;
     }

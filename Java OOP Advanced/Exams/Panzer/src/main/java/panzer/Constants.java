@@ -2,9 +2,6 @@ package panzer;
 
 public final class Constants {
 
-    //Paths
-    public static final String VEHICLE_ASSEMBLER_PATH = "panzer.models.miscellaneous.VehicleAssembler";
-
     //Vanguard modifiers
     public static final double VANGUARD_WEIGHT_MODIFIER = 2;
     public static final double VANGUARD_ATTACK_MODIFIER = 0.75;
