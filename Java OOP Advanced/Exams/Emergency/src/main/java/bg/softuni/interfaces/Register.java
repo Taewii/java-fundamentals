@@ -1,7 +1,5 @@
 package bg.softuni.interfaces;
 
-import bg.softuni.models.emergencies.BaseEmergency;
-
 public interface Register {
 
     Emergency dequeueEmergency();
@@ -9,4 +7,10 @@ public interface Register {
     Emergency peekEmergency();
 
     void enqueueEmergency(Emergency emergency);
+
+    Boolean isEmpty();
+
+    Boolean containsEmergencyType(String type);
+
+    int amountEmergenciesLeftFromType(String type);
 }

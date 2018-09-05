@@ -102,12 +102,12 @@ public class RegistrationTime implements Time {
 
     @Override
     public String toString() {
-        String hour = this.hour < 10 ? "0" + this.hour : this.hour + "";
-        String minutes = this.minutes < 10 ? "0" + this.minutes : this.minutes + "";
-        String day = this.day < 10 ? "0" + this.day : this.day + "";
-        String month = this.month < 10 ? "0" + this.month : this.month + "";
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.hour < 10 ? "0" + this.hour : this.hour).append(":");
+        sb.append(this.minutes < 10 ? "0" + this.minutes : this.minutes).append(" ");
+        sb.append(this.day < 10 ? "0" + this.day : this.day).append("/");
+        sb.append(this.month < 10 ? "0" + this.month : this.month).append("/").append(this.year);
 
-        String result = hour + ":" + minutes + " " + day + "/" + month + "/" + this.year;
-        return result;
+        return sb.toString();
     }
 }

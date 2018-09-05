@@ -7,4 +7,8 @@ public interface EmergencyCenter {
     Integer getAmountOfMaximumEmergencies();
 
     Boolean isForRetirement();
+
+    String managingEmergencyType();
+
+    void processEmergency(Emergency emergency);
 }

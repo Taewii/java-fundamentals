@@ -15,4 +15,9 @@ public class PublicOrderEmergency extends BaseEmergency {
     public String getCaseStatus() {
         return this.caseStatus;
     }
+
+    @Override
+    public String emergencyType() {
+        return "Order";
+    }
 }

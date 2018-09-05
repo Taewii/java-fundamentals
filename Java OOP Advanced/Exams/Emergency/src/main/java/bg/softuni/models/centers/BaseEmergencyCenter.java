@@ -33,4 +33,8 @@ public abstract class BaseEmergencyCenter implements EmergencyCenter {
     public Boolean isForRetirement() {
         return this.processedEmergenices.size() >= this.amountOfMaximumEmergencies;
     }
+
+    public void processEmergency(Emergency emergency) {
+        this.processedEmergenices.add(emergency);
+    }
 }

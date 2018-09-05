@@ -9,4 +9,6 @@ public interface Emergency {
     EmergencyLevel getEmergencyLevel();
 
     Time getRegistrationTime();
+
+    String emergencyType();
 }

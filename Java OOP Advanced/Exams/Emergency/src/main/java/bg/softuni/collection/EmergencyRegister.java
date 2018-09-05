@@ -64,9 +64,12 @@ public class EmergencyRegister implements Register {
     public Emergency dequeueEmergency() {
         Emergency removedElement = this.emergencyQueue[0];
 
+        Emergency[] newArray = new BaseEmergency[this.currentSize - 1];
         for (int i = 0; i < this.currentSize - 1; i++) {
-            this.emergencyQueue[i] = this.emergencyQueue[i + 1];
+            newArray[i] = this.emergencyQueue[i + 1];
         }
+
+        this.emergencyQueue = newArray;
 
         this.decrementNextIndex();
         this.decrementCurrentSize();
@@ -79,6 +82,30 @@ public class EmergencyRegister implements Register {
         return this.emergencyQueue[0];
     }
 
+    @Override
+    public Boolean containsEmergencyType(String type) {
+        for (Emergency emergency : this.emergencyQueue) {
+            if (emergency.emergencyType().equals(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int amountEmergenciesLeftFromType(String type) {
+        int count = 0;
+
+        for (Emergency emergency : this.emergencyQueue) {
+            if (emergency.emergencyType().equals(type)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    @Override
     public Boolean isEmpty() {
         return this.currentSize <= 0;
     }

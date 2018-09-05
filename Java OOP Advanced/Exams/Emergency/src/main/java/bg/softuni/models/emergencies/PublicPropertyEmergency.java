@@ -15,4 +15,9 @@ public class PublicPropertyEmergency extends BaseEmergency {
     public int getPropertyDamage() {
         return this.propertyDamage;
     }
+
+    @Override
+    public String emergencyType() {
+        return "Property";
+    }
 }

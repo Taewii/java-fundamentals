@@ -15,4 +15,9 @@ public class PublicHealthEmergency extends BaseEmergency {
     public int getCasualties() {
         return this.casualties;
     }
+
+    @Override
+    public String emergencyType() {
+        return "Health";
+    }
 }
