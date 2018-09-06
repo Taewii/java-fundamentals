@@ -1,11 +1,9 @@
 package bg.softuni;
 
+import bg.softuni.collection.EmergencyRegister;
 import bg.softuni.core.EmergencyManagementSystem;
 import bg.softuni.core.EngineImpl;
-import bg.softuni.interfaces.Engine;
-import bg.softuni.interfaces.InputReader;
-import bg.softuni.interfaces.Manager;
-import bg.softuni.interfaces.OutputWriter;
+import bg.softuni.interfaces.*;
 import bg.softuni.io.ConsoleReader;
 import bg.softuni.io.ConsoleWriter;
 
@@ -17,7 +15,8 @@ public class Main {
 
         InputReader reader = new ConsoleReader(new BufferedReader(new InputStreamReader(System.in)));
         OutputWriter writer = new ConsoleWriter();
-        Manager manager = new EmergencyManagementSystem();
+        Register register = new EmergencyRegister();
+        Manager manager = new EmergencyManagementSystem(register);
         Engine engine = new EngineImpl(reader, writer, manager);
 
         engine.run();

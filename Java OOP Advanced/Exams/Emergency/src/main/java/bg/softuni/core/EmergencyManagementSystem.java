@@ -1,6 +1,5 @@
 package bg.softuni.core;
 
-import bg.softuni.collection.EmergencyRegister;
 import bg.softuni.enums.EmergencyLevel;
 import bg.softuni.interfaces.*;
 import bg.softuni.models.centers.FiremanServiceCenter;
@@ -19,12 +18,12 @@ import java.util.List;
 
 public class EmergencyManagementSystem implements Manager {
 
-    private Deque<EmergencyCenter> centers;
     private Register emergencies;
+    private Deque<EmergencyCenter> centers;
     private List<Emergency> processedEmergencies;
 
-    public EmergencyManagementSystem() {
-        this.emergencies = new EmergencyRegister();
+    public EmergencyManagementSystem(Register emergencies) {
+        this.emergencies = emergencies;
         this.centers = new ArrayDeque<>();
         this.processedEmergencies = new ArrayList<>();
     }
@@ -132,7 +131,7 @@ public class EmergencyManagementSystem implements Manager {
             } else if (emergency instanceof PublicHealthEmergency) {
                 totalHealthCasualtiesSaved += ((PublicHealthEmergency) emergency).getCasualties();
             } else if (emergency instanceof PublicOrderEmergency) {
-                if ("Special".equals(emergency.emergencyType())) {
+                if ("Special".equals(((PublicOrderEmergency) emergency).getCaseStatus())) {
                     totalSpecialCasesProcessed++;
                 }
             }

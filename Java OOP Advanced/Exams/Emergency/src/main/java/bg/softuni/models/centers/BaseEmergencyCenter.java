@@ -2,7 +2,6 @@ package bg.softuni.models.centers;
 
 import bg.softuni.interfaces.Emergency;
 import bg.softuni.interfaces.EmergencyCenter;
-import bg.softuni.models.emergencies.BaseEmergency;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,12 +10,12 @@ public abstract class BaseEmergencyCenter implements EmergencyCenter {
 
     private String name;
     private Integer amountOfMaximumEmergencies;
-    private List<Emergency> processedEmergenices;
+    private List<Emergency> processedEmergencies;
 
     protected BaseEmergencyCenter(String name, Integer amountOfMaximumEmergencies) {
         this.name = name;
         this.amountOfMaximumEmergencies = amountOfMaximumEmergencies;
-        this.processedEmergenices = new ArrayList<>();
+        this.processedEmergencies = new ArrayList<>();
     }
 
     @Override
@@ -31,10 +30,10 @@ public abstract class BaseEmergencyCenter implements EmergencyCenter {
 
     @Override
     public Boolean isForRetirement() {
-        return this.processedEmergenices.size() >= this.amountOfMaximumEmergencies;
+        return this.processedEmergencies.size() >= this.amountOfMaximumEmergencies;
     }
 
     public void processEmergency(Emergency emergency) {
-        this.processedEmergenices.add(emergency);
+        this.processedEmergencies.add(emergency);
     }
 }

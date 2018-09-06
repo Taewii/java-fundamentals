@@ -50,6 +50,16 @@ public class EmergencyRegister implements Register {
         this.emergencyQueue = newArray;
     }
 
+    private void downsizeAfterElementRemoval() {
+        Emergency[] newArray = new BaseEmergency[this.currentSize - 1];
+
+        for (int i = 0; i < this.currentSize - 1; i++) {
+            newArray[i] = this.emergencyQueue[i + 1];
+        }
+
+        this.emergencyQueue = newArray;
+    }
+
     @Override
     public void enqueueEmergency(Emergency emergency) {
         this.checkIfResizeNeeded();
@@ -64,12 +74,7 @@ public class EmergencyRegister implements Register {
     public Emergency dequeueEmergency() {
         Emergency removedElement = this.emergencyQueue[0];
 
-        Emergency[] newArray = new BaseEmergency[this.currentSize - 1];
-        for (int i = 0; i < this.currentSize - 1; i++) {
-            newArray[i] = this.emergencyQueue[i + 1];
-        }
-
-        this.emergencyQueue = newArray;
+        downsizeAfterElementRemoval();
 
         this.decrementNextIndex();
         this.decrementCurrentSize();
@@ -97,7 +102,7 @@ public class EmergencyRegister implements Register {
         int count = 0;
 
         for (Emergency emergency : this.emergencyQueue) {
-            if (emergency.emergencyType().equals(type)) {
+            if (emergency != null && emergency.emergencyType().equals(type)) {
                 count++;
             }
         }
